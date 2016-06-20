@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">SafeDefender</string>
+    <string name="app_name">安全卫士</string>
+    <string name="app_version">版本号 1.0</string>
+
 </resources>
