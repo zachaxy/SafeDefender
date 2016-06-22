@@ -2,5 +2,8 @@
     <string name="app_name">安全卫士</string>
     <string name="app_version">版本号</string>
     <string name="download_progress">下载进度</string>
+    <string name="function_list">功能列表</string>
+    <string name="marquee_ad">1.【红包助手】驾到，红包实时提醒，抢红包快人一秒！  2.【程序锁】新升级，加锁私密应用，自动抓拍偷窥者！</string>
+    <string name="testString">测试文字,用来显示布局大小</string>
 
 </resources>

@@ -1,13 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.zachaxy.safedefender.ui.HomeActivity">
 
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/tv_funcList"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:text="@string/function_list"
+        android:textColor="@color/black"
+        android:textSize="30sp" />
+
+    <com.zachaxy.safedefender.widget.MarqueeTextView
+        android:id="@+id/tv_ad"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="hello" />
-</RelativeLayout>
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"
+        android:text="@string/marquee_ad" />
+
+    <GridView
+        android:id="@+id/gv_functions"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:numColumns="3"
+        android:verticalSpacing="20dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:singleLine="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:ellipsize="marquee"
+        android:text="@string/marquee_ad" />
+</LinearLayout>
