@@ -6,6 +6,27 @@
     android:orientation="vertical">
 
 
+    <ImageView
+        android:id="@+id/countDown_img"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:onClick="enterHome"
+        android:src="@drawable/countdown" />
+
+    <TextView
+        android:id="@+id/countDown_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:paddingRight="23dp"
+        android:paddingTop="23dp"
+        android:onClick="enterHome"
+        android:text="3s" />
+
+
     <TextView
         android:id="@+id/tv_verdsion"
         android:layout_width="wrap_content"
