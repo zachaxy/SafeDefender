@@ -1,10 +1,12 @@
 package com.zachaxy.safedefender.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -45,6 +47,18 @@ public class HomeActivity extends Activity {
 
         mFuncList = (GridView) findViewById(R.id.gv_functions);
         mFuncList.setAdapter(new FuncAdapter());
+        mFuncList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position){
+                    case 8:
+                        startActivity(new Intent(HomeActivity.this,SettingActivity.class));
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
     }
 
 
