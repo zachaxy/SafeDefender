@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!--下面这样定义的主题也可是实现notitle的效果,系统内有一个NoTitile的主题就是这么实现的-->
     <style name="notitle">
         <item name="android:windowNoTitle">true</item>
     </style>

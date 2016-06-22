@@ -8,12 +8,11 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +32,10 @@ public class SplashActivity extends Activity {
 
     private TextView mAppVersion;
     private TextView mCountDownTV;
+
+    private TextView mTVDownload;
+    private ProgressBar mPBDownload;
+
     private UpdateInfo mUpdateInfo;
     private Handler mHandler;
 
@@ -44,7 +47,6 @@ public class SplashActivity extends Activity {
     private static final int CODE_CHANGE_COUNTDOWN = 5;
 
 
-    private boolean directEnterHome = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +55,11 @@ public class SplashActivity extends Activity {
         setContentView(R.layout.activity_splash);
         mAppVersion = (TextView) findViewById(R.id.tv_verdsion);
         mAppVersion.setText("版本号:" + getLocalVersionName());
+
         mCountDownTV = (TextView) findViewById(R.id.countDown_tv);
+        mTVDownload = (TextView) findViewById(R.id.tv_progress);
+        mPBDownload = (ProgressBar) findViewById(R.id.pb_download);
+
         checkVersion();
         mHandler = new Handler() {
             @Override
@@ -119,8 +125,7 @@ public class SplashActivity extends Activity {
             //没有找到相关的报名.因此这里建议使用getPackageName()方法,而不是手动写入包名字符串
             e.printStackTrace();
         }
-        int versionCode = packageInfo.versionCode;
-        return versionCode;
+        return packageInfo.versionCode;
     }
 
 
@@ -210,6 +215,7 @@ public class SplashActivity extends Activity {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("正在下载最新版本" + mUpdateInfo.getVersionName());
         dialog.setMessage(mUpdateInfo.getDescription());
+        //dialog.setCancelable(false); //尽量不用强制用户
         dialog.setPositiveButton("立即更新", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -219,6 +225,15 @@ public class SplashActivity extends Activity {
         dialog.setNegativeButton("稍后提醒", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                enterHome();
+            }
+        });
+
+        //在弹出对话框后,点击back键盘进入这个方法,证明不感兴趣
+        //优化体验:直接跳转到主页面
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
                 enterHome();
             }
         });
@@ -244,6 +259,23 @@ public class SplashActivity extends Activity {
     public void enterHome(View view) {
         mHandler.removeMessages(CODE_CHANGE_COUNTDOWN);
         mHandler.removeMessages(CODE_ENTER_HOME);
+        enterHome();
+    }
+
+    /***
+     * 暂时不用此功能
+     * 下载结束后跳转到系统的安装程序,由系统安装程序进行新版本程序的安装
+     */
+    private void onDownloadFinshed(){
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        //intent.setDataAndType(Uri.fromFile("下载的路径的file对象"),"application/vnd.android.package-archive")
+        //如果用户取消安装,会返回结果,并调用回调方法onActivityResult()
+        startActivityForResult(intent,0);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         enterHome();
     }
 }
