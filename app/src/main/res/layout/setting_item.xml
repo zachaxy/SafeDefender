@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--该布局是自定义的设置选项的布局,这里将checkBox设置为不可点击,其点击事件由整个布局截取-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

@@ -37,7 +37,36 @@ public class SplashActivity extends Activity {
     private ProgressBar mPBDownload;
 
     private UpdateInfo mUpdateInfo;
-    private Handler mHandler;
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case CODE_UPDATE_DIALOG:
+                    showUpdateDialog();
+                    break;
+                case CODE_URL_ERROR:
+                    Toast.makeText(SplashActivity.this, "下载链接错误", Toast.LENGTH_LONG).show();
+                    //enterHome();
+                    break;
+                case CODE_NET_ERROR:
+                    Toast.makeText(SplashActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
+                    // enterHome();
+                    break;
+                case CODE_JSON_ERROR:
+                    Toast.makeText(SplashActivity.this, "数据解析失败", Toast.LENGTH_LONG).show();
+                    // enterHome();
+                    break;
+                case CODE_CHANGE_COUNTDOWN:
+                    String text = (String) msg.obj;
+                    mCountDownTV.setText(text);
+                    break;
+                default:
+                    //enterHome();
+                    break;
+            }
+        }
+    };
 
     private static final int CODE_UPDATE_DIALOG = 0;
     private static final int CODE_URL_ERROR = 1;
@@ -45,7 +74,6 @@ public class SplashActivity extends Activity {
     private static final int CODE_JSON_ERROR = 3;
     private static final int CODE_ENTER_HOME = 4;
     private static final int CODE_CHANGE_COUNTDOWN = 5;
-
 
 
     @Override
@@ -60,36 +88,12 @@ public class SplashActivity extends Activity {
         mTVDownload = (TextView) findViewById(R.id.tv_progress);
         mPBDownload = (ProgressBar) findViewById(R.id.pb_download);
 
-        checkVersion();
-        mHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case CODE_UPDATE_DIALOG:
-                        showUpdateDialog();
-                        break;
-                    case CODE_URL_ERROR:
-                        Toast.makeText(SplashActivity.this, "下载链接错误", Toast.LENGTH_LONG).show();
-                        enterHome();
-                        break;
-                    case CODE_NET_ERROR:
-                        Toast.makeText(SplashActivity.this, "网络连接异常", Toast.LENGTH_LONG).show();
-                        enterHome();
-                        break;
-                    case CODE_JSON_ERROR:
-                        Toast.makeText(SplashActivity.this, "数据解析失败", Toast.LENGTH_LONG).show();
-                        enterHome();
-                        break;
-                    case CODE_CHANGE_COUNTDOWN:
-                        String text = (String) msg.obj;
-                        mCountDownTV.setText(text);
-                        break;
-                    default:
-                        enterHome();
-                        break;
-                }
-            }
-        };
+        if (getSharedPreferences("config", MODE_PRIVATE).getBoolean("auto_update", true)) {
+            checkVersion();
+        } else {
+            delayToCountDown(5);
+        }
+
     }
 
 
@@ -145,7 +149,6 @@ public class SplashActivity extends Activity {
                     conn.setRequestMethod("GET");  //设置请求方法
                     conn.setConnectTimeout(5000);  //设置连接超时
                     conn.setReadTimeout(5000);     //设置读取超时,读文件不得超过3s,因为update.json仅有五条数据
-                    //conn.connect();
 
                     int responseCode = conn.getResponseCode();
                     Log.d("###", "run: here");
@@ -162,14 +165,7 @@ public class SplashActivity extends Activity {
                             //但是这里如果是最新版本的话,会很快跳转到主页面,所以这里应该加一个延时,来展示我们的logo或广告.
                             //TODO:扩展仿照主流应用,在右上角添加一个倒计时圆圈,如果点击直接进入,那么直接进入到主页面
                             //这一步代码出了问题,界面迟迟加载不进来,是Handler的问题吗
-                            for (int i = 10; i > 0; i--) {
-                                Message msg = new Message();
-                                msg.what = CODE_CHANGE_COUNTDOWN;
-                                msg.obj = "" + i + "s";
-                                mHandler.sendMessageDelayed(msg, (10 - i) * 1000);
-                            }
-
-                            mHandler.sendEmptyMessageDelayed(CODE_ENTER_HOME, 10000);
+                            //delayToCountDown(10);
                             /*//如下代码会报错,待检测
                             Message msg = new Message();
                             msg.what = CODE_CHANGE_COUNTDOWN;
@@ -193,6 +189,7 @@ public class SplashActivity extends Activity {
                     e.printStackTrace();
 
                 } finally {
+                    delayToCountDown(5);
                     try {
                         if (in != null) {
                             in.close();
@@ -241,6 +238,8 @@ public class SplashActivity extends Activity {
     }
 
     private void enterHome() {
+        mHandler.removeMessages(CODE_CHANGE_COUNTDOWN);
+        mHandler.removeMessages(CODE_ENTER_HOME);
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
         //进入主页面,把欢迎页面finish掉,防止用户点击返回键时,在回到该页面
@@ -254,24 +253,35 @@ public class SplashActivity extends Activity {
      * TODO: 存在的问题是如果直接跳转进入主界面,那么之前子线程的计数器还在进行,倒计时0s后还是会在执行一次跳转到主界面
      * 解决方法:添加一个标志位?(x)方法不可取,因为在sendMessage的时候是一块发出去的,并不是间隔一秒再发的,只是处理的时候按照间隔一秒处理
      * 正确的方法是使用handler.removeMessage(int what)方法
+     *
      * @param view
      */
     public void enterHome(View view) {
-        mHandler.removeMessages(CODE_CHANGE_COUNTDOWN);
-        mHandler.removeMessages(CODE_ENTER_HOME);
         enterHome();
+    }
+
+
+    private void delayToCountDown(int delayTime) {
+        for (int i = delayTime; i > 0; i--) {
+            Message msg = new Message();
+            msg.what = CODE_CHANGE_COUNTDOWN;
+            msg.obj = "" + i + "s";
+            mHandler.sendMessageDelayed(msg, (delayTime - i) * 1000);
+        }
+
+        mHandler.sendEmptyMessageDelayed(CODE_ENTER_HOME, delayTime * 1000);
     }
 
     /***
      * 暂时不用此功能
      * 下载结束后跳转到系统的安装程序,由系统安装程序进行新版本程序的安装
      */
-    private void onDownloadFinshed(){
+    private void onDownloadFinshed() {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
         //intent.setDataAndType(Uri.fromFile("下载的路径的file对象"),"application/vnd.android.package-archive")
         //如果用户取消安装,会返回结果,并调用回调方法onActivityResult()
-        startActivityForResult(intent,0);
+        startActivityForResult(intent, 0);
     }
 
     @Override

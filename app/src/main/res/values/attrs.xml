@@ -2,6 +2,7 @@
 <resources>
     <declare-styleable name="SettingItemView">
         <attr name="set_item_title" format="string" />
-        <attr name="set_item_desc" format="string" />
+        <attr name="set_item_desc_on" format="string" />
+        <attr name="set_item_desc_off" format="string" />
     </declare-styleable>
 </resources>

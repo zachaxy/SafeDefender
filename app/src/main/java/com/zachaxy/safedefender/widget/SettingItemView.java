@@ -1,6 +1,7 @@
 package com.zachaxy.safedefender.widget;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.CheckBox;
@@ -8,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.zachaxy.safedefender.R;
+
 
 /**
  * Created by zhangxin on 2016/6/22.
@@ -19,9 +21,15 @@ public class SettingItemView extends RelativeLayout {
     private TextView mTVTitle;
     private TextView mTVDescribe;
     private CheckBox mCheck;
+    private SharedPreferences mConfig;
+
+    private String title;
+    private String desc_on;
+    private String desc_off;
+
+    private static final String NAME_SPACE = "http://schemas.android.com/apk/res-auto";
 
     public SettingItemView(Context context) {
-        // super(context);
         this(context, null);
     }
 
@@ -31,11 +39,13 @@ public class SettingItemView extends RelativeLayout {
 
     public SettingItemView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        int attributeCount = attrs.getAttributeCount();
-        for (int i = 0;i<attributeCount;i++){
-            System.out.println(attrs.getAttributeName(i)+"--"+attrs.getAttributeValue(i));
-        }
+
+        //暂时不能使用引用的字符串
+        title = attrs.getAttributeValue(NAME_SPACE, "set_item_title");
+        desc_on = attrs.getAttributeValue(NAME_SPACE, "set_item_desc_on");
+        desc_off = attrs.getAttributeValue(NAME_SPACE, "set_item_desc_off");
         initView();
+        setTitle(title);
     }
 
     /***
@@ -48,18 +58,27 @@ public class SettingItemView extends RelativeLayout {
         View.inflate(getContext(), R.layout.setting_item, this);
         mTVTitle = (TextView) findViewById(R.id.tv_set_title);
         mTVDescribe = (TextView) findViewById(R.id.tv_set_desc);
-        mCheck= (CheckBox) findViewById(R.id.cb_check);
+        mCheck = (CheckBox) findViewById(R.id.cb_check);
     }
 
-    public void setTitle(String s){
+    public void setTitle(String s) {
         mTVTitle.setText(s);
     }
 
-    public void setDesc(String s){
+    public void setDesc(String s) {
         mTVDescribe.setText(s);
     }
 
-    public void setCheck(boolean isCheck){
+    public void setCheck(boolean isCheck) {
         mCheck.setChecked(isCheck);
+        if (isCheck) {
+            setDesc(desc_on);
+        } else {
+            setDesc(desc_off);
+        }
+    }
+
+    public boolean isCheck(){
+        return mCheck.isChecked();
     }
 }
