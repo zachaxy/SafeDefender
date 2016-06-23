@@ -2,12 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/splash_main_bg"
-    android:orientation="vertical">
+    android:id="@+id/acty_splash"
+    android:background="@drawable/splash_main_bg">
 
 
     <ImageView
-        android:id="@+id/countDown_img"
+        android:id="@+id/img_countDown"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentRight="true"
@@ -17,14 +17,14 @@
         android:src="@drawable/countdown" />
 
     <TextView
-        android:id="@+id/countDown_tv"
+        android:id="@+id/tv_countDown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:onClick="enterHome"
         android:paddingRight="23dp"
         android:paddingTop="23dp"
-        android:text="10s" />
+        android:text="9s" />
 
 
     <TextView
@@ -40,7 +40,7 @@
         android:text="@string/app_version" />
 
     <ProgressBar
-        android:id="@+id/pb"
+        android:id="@+id/pb_wait"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_verdsion"
@@ -60,11 +60,11 @@
 
     <ProgressBar
         android:id="@+id/pb_download"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="10dp"
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="10dp"
         android:layout_toRightOf="@id/tv_progress" />
 </RelativeLayout>

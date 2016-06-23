@@ -15,5 +15,5 @@
         android:layout_height="wrap_content"
         custom:set_item_desc_on="自动更新已开启"
         custom:set_item_desc_off="自动更新已关闭"
-        custom:set_item_title="自动更新设置" />
+        custom:set_item_title="@string/set_tv_dec_1" />
 </LinearLayout>

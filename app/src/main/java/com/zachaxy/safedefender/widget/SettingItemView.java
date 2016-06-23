@@ -45,6 +45,8 @@ public class SettingItemView extends RelativeLayout {
         desc_on = attrs.getAttributeValue(NAME_SPACE, "set_item_desc_on");
         desc_off = attrs.getAttributeValue(NAME_SPACE, "set_item_desc_off");
         initView();
+        title = title.substring(1);
+        title = context.getString(Integer.valueOf(title));
         setTitle(title);
     }
 

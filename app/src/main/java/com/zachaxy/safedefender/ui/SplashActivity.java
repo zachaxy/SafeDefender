@@ -12,7 +12,9 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.AlphaAnimation;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +32,7 @@ import java.net.URL;
 
 public class SplashActivity extends Activity {
 
+    private RelativeLayout mActySplash;
     private TextView mAppVersion;
     private TextView mCountDownTV;
 
@@ -37,6 +40,14 @@ public class SplashActivity extends Activity {
     private ProgressBar mPBDownload;
 
     private UpdateInfo mUpdateInfo;
+
+    private static final int CODE_UPDATE_DIALOG = 0;
+    private static final int CODE_URL_ERROR = 1;
+    private static final int CODE_NET_ERROR = 2;
+    private static final int CODE_JSON_ERROR = 3;
+    private static final int CODE_ENTER_HOME = 4;
+    private static final int CODE_CHANGE_COUNTDOWN = 5;
+
 
     private Handler mHandler = new Handler() {
         @Override
@@ -62,29 +73,27 @@ public class SplashActivity extends Activity {
                     mCountDownTV.setText(text);
                     break;
                 default:
-                    //enterHome();
+                    enterHome();
                     break;
             }
         }
     };
 
-    private static final int CODE_UPDATE_DIALOG = 0;
-    private static final int CODE_URL_ERROR = 1;
-    private static final int CODE_NET_ERROR = 2;
-    private static final int CODE_JSON_ERROR = 3;
-    private static final int CODE_ENTER_HOME = 4;
-    private static final int CODE_CHANGE_COUNTDOWN = 5;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         setContentView(R.layout.activity_splash);
+
+        mActySplash = (RelativeLayout) findViewById(R.id.acty_splash);
         mAppVersion = (TextView) findViewById(R.id.tv_verdsion);
         mAppVersion.setText("版本号:" + getLocalVersionName());
 
-        mCountDownTV = (TextView) findViewById(R.id.countDown_tv);
+        mCountDownTV = (TextView) findViewById(R.id.tv_countDown);
         mTVDownload = (TextView) findViewById(R.id.tv_progress);
         mPBDownload = (ProgressBar) findViewById(R.id.pb_download);
 
@@ -94,6 +103,10 @@ public class SplashActivity extends Activity {
             delayToCountDown(5);
         }
 
+        //设置渐变的动画,范围是0.0~1.0,
+        AlphaAnimation animation = new AlphaAnimation(0.3f,1.0f);
+        animation.setDuration(5000);
+        mActySplash.startAnimation(animation);
     }
 
 
@@ -147,8 +160,8 @@ public class SplashActivity extends Activity {
                     URL url = new URL("http://10.0.2.2/update.json");
                     conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");  //设置请求方法
-                    conn.setConnectTimeout(5000);  //设置连接超时
-                    conn.setReadTimeout(5000);     //设置读取超时,读文件不得超过3s,因为update.json仅有五条数据
+                    conn.setConnectTimeout(3000);  //设置连接超时
+                    conn.setReadTimeout(3000);     //设置读取超时,读文件不得超过3s,因为update.json仅有五条数据
 
                     int responseCode = conn.getResponseCode();
                     Log.d("###", "run: here");

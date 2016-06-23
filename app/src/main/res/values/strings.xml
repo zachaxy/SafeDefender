@@ -11,5 +11,10 @@
     <string name="set_tv_dec_1">自动更新设置</string>
     <string name="set_tv_dec_2">自动更新已关闭</string>
     <string name="set_tv_dec_3">自动更新已关闭</string>
+    <string name="safe_tv_pwd">设置密码</string>
+    <string name="safe_tv_enter_pwd">请输入密码</string>
+    <string name="safe_tv_confirm_pwd">请再次输入密码</string>
+    <string name="ok">确认</string>
+    <string name="cancle">取消</string>
 
 </resources>
