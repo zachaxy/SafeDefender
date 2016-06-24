@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zachaxy.safedefender.R;
+import com.zachaxy.safedefender.widget.SafeGuideViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.List;
 public class SafeGuideActivity extends Activity {
 
     private TextView mSafeGuideTop;
-    private ViewPager mSafeGuidePages;
+    private SafeGuideViewPager mSafeGuidePages;
     private LinearLayout mSafeGuideBottom;
 
     private PagerAdapter mSafeGuideAdapter;
@@ -27,6 +28,7 @@ public class SafeGuideActivity extends Activity {
     private View mGuideView1, mGuideView2, mGuideView3, mGuideView4;
 
     private ImageView mGuideTip0, mGuideTip1, mGuideTip2, mGuideTip3;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +40,7 @@ public class SafeGuideActivity extends Activity {
 
     private void initViews() {
         mSafeGuideTop = (TextView) findViewById(R.id.tv_safe_guide_top);
-        mSafeGuidePages = (ViewPager) findViewById(R.id.vp_safe_guides);
+        mSafeGuidePages = (SafeGuideViewPager) findViewById(R.id.vp_safe_guides);
         mSafeGuideBottom = (LinearLayout) findViewById(R.id.ll_set_guide_bottom);
 
         mGuideTip0 = (ImageView) findViewById(R.id.img_safe_guide_tip0);
@@ -82,22 +84,31 @@ public class SafeGuideActivity extends Activity {
             public void destroyItem(ViewGroup container, int position, Object object) {
                 container.removeView(mGuideViews.get(position));
             }
+
         };
 
         mSafeGuidePages.setAdapter(mSafeGuideAdapter);
 
 
         mSafeGuidePages.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                //System.out.println("未知?"+position+"<->"+positionOffset+"<->"+positionOffsetPixels);
 
             }
 
+            /***
+             * 当一个新的page滑动进来,传入其position
+             * @param position
+             */
             @Override
             public void onPageSelected(int position) {
-                int index = mSafeGuidePages.getCurrentItem();
+                //int index = mSafeGuidePages.getCurrentItem();
+                // System.out.println("是不是一个索引:"+index+"<------>"+position);
+                //经过测试这是一个索引,所以不再另外多生成一个index了
                 resetGuideImg();
-                switch (index){
+                switch (position) {
                     case 0:
                         mGuideTip0.setImageResource(R.drawable.tip_focused);
                         break;
@@ -117,12 +128,19 @@ public class SafeGuideActivity extends Activity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
+                //System.out.println("状态值"+state);
             }
+
+
         });
     }
 
 
+    /***
+     * 点击bottom栏的tips,跳转到相应的page.
+     *
+     * @param v
+     */
     public void changeGuidePage(View v) {
         resetGuideImg();
         switch (v.getId()) {
@@ -154,4 +172,6 @@ public class SafeGuideActivity extends Activity {
         mGuideTip2.setImageResource(R.drawable.tip_unfocused);
         mGuideTip3.setImageResource(R.drawable.tip_unfocused);
     }
+
+
 }
