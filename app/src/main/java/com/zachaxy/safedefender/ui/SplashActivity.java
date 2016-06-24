@@ -48,6 +48,7 @@ public class SplashActivity extends Activity {
     private static final int CODE_ENTER_HOME = 4;
     private static final int CODE_CHANGE_COUNTDOWN = 5;
 
+    private boolean againFlag = true;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -80,8 +81,6 @@ public class SplashActivity extends Activity {
     };
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,7 +103,7 @@ public class SplashActivity extends Activity {
         }
 
         //设置渐变的动画,范围是0.0~1.0,
-        AlphaAnimation animation = new AlphaAnimation(0.3f,1.0f);
+        AlphaAnimation animation = new AlphaAnimation(0.3f, 1.0f);
         animation.setDuration(5000);
         mActySplash.startAnimation(animation);
     }
@@ -157,6 +156,7 @@ public class SplashActivity extends Activity {
                 InputStream in = null;
                 HttpURLConnection conn = null;
                 try {
+                    delayToCountDown(5);
                     URL url = new URL("http://10.0.2.2/update.json");
                     conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");  //设置请求方法
@@ -202,7 +202,7 @@ public class SplashActivity extends Activity {
                     e.printStackTrace();
 
                 } finally {
-                    delayToCountDown(5);
+                    //delayToCountDown(5);
                     try {
                         if (in != null) {
                             in.close();

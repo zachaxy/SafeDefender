@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -19,12 +18,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zachaxy.safedefender.R;
+import com.zachaxy.safedefender.utils.EncryptUtils;
 
 public class HomeActivity extends Activity {
 
     private GridView mFuncList;
     private SharedPreferences mPref;
 
+    private final String SECREtKEY = "dashenshouhuweishi";
     private String[] mFuncDesc = {
             "手机防盗",
             "通信卫士",
@@ -94,7 +95,7 @@ public class HomeActivity extends Activity {
             public void onClick(View v) {
                 String s1 = et1.getText().toString();
                 if (!TextUtils.isEmpty(s1)) {
-                    if (s1.equals(mPref.getString("password", null))) {
+                    if (EncryptUtils.encrypt(s1,SECREtKEY).equals(mPref.getString("password", null))) {
                         Toast.makeText(HomeActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     } else {
@@ -134,7 +135,7 @@ public class HomeActivity extends Activity {
                 String s2 = et2.getText().toString();
                 if (!TextUtils.isEmpty(s1) && !TextUtils.isEmpty(s2)) {
                     if (s1.equals(s2)) {
-                        mPref.edit().putString("password", s1).commit();
+                        mPref.edit().putString("password", EncryptUtils.encrypt(s1,SECREtKEY)).commit();
                         dialog.dismiss();
                     } else {
                         Toast.makeText(HomeActivity.this, "两次输入的密码不同,请重新设置密码", Toast.LENGTH_SHORT).show();

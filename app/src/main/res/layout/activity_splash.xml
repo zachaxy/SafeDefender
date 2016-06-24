@@ -24,7 +24,7 @@
         android:onClick="enterHome"
         android:paddingRight="23dp"
         android:paddingTop="23dp"
-        android:text="9s" />
+        android:text="5s" />
 
 
     <TextView
