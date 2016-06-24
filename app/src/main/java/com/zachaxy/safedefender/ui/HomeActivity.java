@@ -95,9 +95,12 @@ public class HomeActivity extends Activity {
             public void onClick(View v) {
                 String s1 = et1.getText().toString();
                 if (!TextUtils.isEmpty(s1)) {
-                    if (EncryptUtils.encrypt(s1,SECREtKEY).equals(mPref.getString("password", null))) {
+                    if (EncryptUtils.encrypt(s1, SECREtKEY).equals(mPref.getString("password", null))) {
                         Toast.makeText(HomeActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
+                        //直接登录,那么肯定已经设置过密码了,所以不进入引导页,而是直接进入页面
+                        startActivity(new Intent(HomeActivity.this, SafeGuideActivity.class));
+                        //startActivity(new Intent(HomeActivity.this, LostFindActivity.class));
                     } else {
                         Toast.makeText(HomeActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
                     }
@@ -135,8 +138,10 @@ public class HomeActivity extends Activity {
                 String s2 = et2.getText().toString();
                 if (!TextUtils.isEmpty(s1) && !TextUtils.isEmpty(s2)) {
                     if (s1.equals(s2)) {
-                        mPref.edit().putString("password", EncryptUtils.encrypt(s1,SECREtKEY)).commit();
+                        mPref.edit().putString("password", EncryptUtils.encrypt(s1, SECREtKEY)).commit();
                         dialog.dismiss();
+                        //第一次设置完密码,跳转到引导界面
+                        startActivity(new Intent(HomeActivity.this, SafeGuideActivity.class));
                     } else {
                         Toast.makeText(HomeActivity.this, "两次输入的密码不同,请重新设置密码", Toast.LENGTH_SHORT).show();
                         et1.setText("");

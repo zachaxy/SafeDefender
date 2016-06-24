@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">安全卫士</string>
     <string name="app_version">版本号</string>
+    <string name="ok">确认</string>
+    <string name="cancle">取消</string>
     <string name="download_progress">下载进度</string>
     <string name="function_list">功能列表</string>
     <string name="top_setting">设置中心</string>
@@ -14,7 +16,12 @@
     <string name="safe_tv_pwd">设置密码</string>
     <string name="safe_tv_enter_pwd">请输入密码</string>
     <string name="safe_tv_confirm_pwd">请再次输入密码</string>
-    <string name="ok">确认</string>
-    <string name="cancle">取消</string>
+    <string name="top_safe">手机防盗</string>
+    <string name="top_safe_guide1">手机防盗</string>
+    <string name="top_safe_guide2">手机防盗</string>
+    <string name="top_safe_guide3">手机防盗</string>
+    <string name="top_safe_guide4">手机防盗</string>
+
+
 
 </resources>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_safe_guide_top"
+        style="@style/top_title" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_safe_guides"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    </android.support.v4.view.ViewPager>
+
+    <LinearLayout
+        android:id="@+id/ll_set_guide_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="30dp">
+
+        <ImageView
+            android:id="@+id/img_safe_guide_tip0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:onClick="changeGuidePage"
+            android:src="@drawable/tip_focused" />
+
+        <ImageView
+            android:id="@+id/img_safe_guide_tip1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:onClick="changeGuidePage"
+            android:src="@drawable/tip_unfocused" />
+
+        <ImageView
+            android:id="@+id/img_safe_guide_tip2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:onClick="changeGuidePage"
+            android:src="@drawable/tip_unfocused" />
+
+        <ImageView
+            android:id="@+id/img_safe_guide_tip3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:onClick="changeGuidePage"
+            android:src="@drawable/tip_unfocused" />
+
+
+    </LinearLayout>
+</LinearLayout>
