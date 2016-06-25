@@ -46,25 +46,51 @@ public class SafeGuideViewPager extends ViewPager {
             return super.dispatchTouchEvent(ev);
         }*/
 
+
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                beforeX = ev.getX();
+                //beforeX = ev.getX();
+                beforeX = ev.getRawX();
                 System.out.println("beforeX:" + beforeX);
                 break;
             case MotionEvent.ACTION_MOVE:
-                float motionValue = ev.getX() - beforeX;
-                System.out.println(ev.getX() + "<---->" + beforeX);
-                beforeX = ev.getX();
+                float currentX = ev.getRawX();
+                //float motionValue = ev.getX() - beforeX;
+                float motionValue = currentX - beforeX;
+                //System.out.println(beforeX+ "<---->" + ev.getX() );
+                System.out.println(beforeX + "<---->" + currentX);
+                if (currentX < 0) {
+                    System.out.println("发送终止触摸事件");
+                    beforeX = 0;
+                    ev.setAction(MotionEvent.ACTION_UP);
+                    onInterceptTouchEvent(ev);
+                } else {
+                    beforeX = currentX;
+                }
                 if (motionValue <= 0) {
                     //表明向右滑动
-                    System.out.println("右滑");
+                    System.out.println("左滑");
                     return true;
                 }
+                break;
+            case MotionEvent.ACTION_UP:
+                System.out.println("up: " + beforeX);
+                beforeX = 0.0f;
+                break;
             default:
                 break;
         }
         return super.dispatchTouchEvent(ev);
     }
+
+
+   /* @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        super.onInterceptTouchEvent(ev);
+        System.out.println("终止触摸事件");
+        return flag;
+
+    }*/
 
  /*   @Override
     public boolean onTouchEvent(MotionEvent ev) {

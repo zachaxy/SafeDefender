@@ -17,10 +17,10 @@
     <string name="safe_tv_enter_pwd">请输入密码</string>
     <string name="safe_tv_confirm_pwd">请再次输入密码</string>
     <string name="top_safe">手机防盗</string>
-    <string name="top_safe_guide1">手机防盗</string>
-    <string name="top_safe_guide2">手机防盗</string>
-    <string name="top_safe_guide3">手机防盗</string>
-    <string name="top_safe_guide4">手机防盗</string>
+    <string name="top_safe_guide1">1.欢迎使用手机防盗</string>
+    <string name="top_safe_guide2">2.手机防盗</string>
+    <string name="top_safe_guide3">3.手机防盗</string>
+    <string name="top_safe_guide4">4.手机防盗</string>
 
 
 
