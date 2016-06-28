@@ -1,9 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <TextView
+        style="@style/top_title"
+        android:text="@string/top_safe_guide2" />
+    <TextView
+        style="@style/content_style"
+        android:text="通过绑定手机SIM卡:"/>
+
+    <TextView
+        android:layout_marginTop="5dp"
+        style="@style/content_style"
+        android:text="下次重启手机如果发现SIM卡变化就会发送报警信息"
+        android:drawableBottom="@drawable/divider_line"
+        android:layout_marginBottom="5dp"/>
+
+
+    <com.zachaxy.safedefender.widget.SettingItemView
+        android:id="@+id/guide_bind_sim"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/testString"/>
+        custom:set_item_desc_on="SIM卡已绑定"
+        custom:set_item_desc_off="SIM卡未绑定"
+        custom:set_item_title="点击绑定SIM卡" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:src="@drawable/safe_set_guide2"/>
 </LinearLayout>

@@ -17,6 +17,10 @@ import com.zachaxy.safedefender.widget.SafeGuideViewPager;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/***
+
+ */
 public class SafeGuideActivity extends Activity {
 
     private TextView mSafeGuideTop;
@@ -54,6 +58,7 @@ public class SafeGuideActivity extends Activity {
         LayoutInflater inflater = getLayoutInflater();
         mGuideView1 = inflater.inflate(R.layout.guideview1, null);
         mGuideView2 = inflater.inflate(R.layout.guideview2, null);
+
         mGuideView3 = inflater.inflate(R.layout.guideview3, null);
         mGuideView4 = inflater.inflate(R.layout.guideview4, null);
 
@@ -63,6 +68,7 @@ public class SafeGuideActivity extends Activity {
         mGuideViews.add(mGuideView3);
         mGuideViews.add(mGuideView4);
 
+        //连接ViewPager与内部各个view的适配器
         mSafeGuideAdapter = new PagerAdapter() {
             @Override
             public int getCount() {
@@ -87,9 +93,11 @@ public class SafeGuideActivity extends Activity {
 
         };
 
+        //设置了adapter才能滑动换页.
         mSafeGuidePages.setAdapter(mSafeGuideAdapter);
 
 
+        //添加一个page切换的监听器,以实时同步底部的dock栏
         mSafeGuidePages.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
@@ -128,16 +136,14 @@ public class SafeGuideActivity extends Activity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                //System.out.println("状态值"+state);
+
             }
-
-
         });
     }
 
 
     /***
-     * 点击bottom栏的tips,跳转到相应的page.
+     * 点击bottom栏的tips,跳转到相应的page.在布局文件中已绑定.
      *
      * @param v
      */

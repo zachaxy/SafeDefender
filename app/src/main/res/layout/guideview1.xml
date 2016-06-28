@@ -32,6 +32,7 @@
         android:text="远程数据销毁"/>
 
     <LinearLayout
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:gravity="center"
         android:layout_height="wrap_content">
@@ -57,6 +58,7 @@
             android:src="@android:drawable/presence_invisible"/>
 
     </LinearLayout>
+
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="0dp"

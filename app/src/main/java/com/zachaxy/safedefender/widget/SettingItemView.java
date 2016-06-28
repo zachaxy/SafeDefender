@@ -45,8 +45,10 @@ public class SettingItemView extends RelativeLayout {
         desc_on = attrs.getAttributeValue(NAME_SPACE, "set_item_desc_on");
         desc_off = attrs.getAttributeValue(NAME_SPACE, "set_item_desc_off");
         initView();
-        title = title.substring(1);
-        title = context.getString(Integer.valueOf(title));
+        if(title.startsWith("@")){
+            title = title.substring(1);
+            title = context.getString(Integer.valueOf(title));
+        }
         setTitle(title);
     }
 
@@ -56,7 +58,7 @@ public class SettingItemView extends RelativeLayout {
     private void initView() {
         //以往在使用View.inflate的时候,第三个参数传入的都是null
         //第三个参数是这个view的ParentView,这里我们需要一个parent,所以传入this.
-        //下面这句话的意思是将setting_item对应的布局文件渲染后,塞给this,是其称为this的viewgroup中的子view
+        //下面这句话的意思是将setting_item对应的布局文件渲染后,塞给this,是其成为this的viewgroup中的子view
         View.inflate(getContext(), R.layout.setting_item, this);
         mTVTitle = (TextView) findViewById(R.id.tv_set_title);
         mTVDescribe = (TextView) findViewById(R.id.tv_set_desc);

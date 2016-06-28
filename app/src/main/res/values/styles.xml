@@ -22,7 +22,9 @@
         <item name="android:textColor">@color/black</item>
         <item name="android:background">@color/colorPrimary</item>
     </style>
-    
+
+
+    <!--设置一个通用的普通文本的样式-->
     <style name="content_style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

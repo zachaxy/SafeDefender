@@ -20,6 +20,15 @@ import android.widget.Toast;
 import com.zachaxy.safedefender.R;
 import com.zachaxy.safedefender.utils.EncryptUtils;
 
+
+/***
+ * 主界面,展示本应用程序的九大功能模块
+ * 使用GridView
+ * (0)当用户点击了手机防盗页面,如果是第一次点击,需要设置用户密码,确认后会进入到用户导航界面.
+ * 如果已经设置过密码,并且进行过用户设置,那么直接跳转到LostAndFound页面
+ * 如果未进行过设置,跳转到SafeGuideActivity界面.
+ * (8)进入SettingActivity界面,进行程序设置
+ */
 public class HomeActivity extends Activity {
 
     private GridView mFuncList;

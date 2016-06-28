@@ -8,6 +8,10 @@ import android.view.View;
 import com.zachaxy.safedefender.R;
 import com.zachaxy.safedefender.widget.SettingItemView;
 
+
+/***
+ * 程序设置界面setting
+ */
 public class SettingActivity extends Activity {
 
     private SharedPreferences mPref;
