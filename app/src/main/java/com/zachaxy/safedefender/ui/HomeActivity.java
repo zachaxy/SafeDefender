@@ -108,8 +108,13 @@ public class HomeActivity extends Activity {
                         Toast.makeText(HomeActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                         //直接登录,那么肯定已经设置过密码了,所以不进入引导页,而是直接进入页面
-                        startActivity(new Intent(HomeActivity.this, SafeGuideActivity.class));
-                        //startActivity(new Intent(HomeActivity.this, LostFindActivity.class));
+                        //上述逻辑错误,设置过密码还要看是否设置过向导,向导没有完成,还是要再次进入向导.
+                        boolean configed = mPref.getBoolean("configed", false);
+                        if(configed){
+                            startActivity(new Intent(HomeActivity.this, LostFindActivity.class));
+                        }else {
+                            startActivity(new Intent(HomeActivity.this, SafeGuideActivity.class));
+                        }
                     } else {
                         Toast.makeText(HomeActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
                     }

@@ -4,12 +4,40 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <Button
-        android:background="@drawable/test"
+    <TextView
+        style="@style/top_title"
+        android:text="@string/top_safe_guide3" />
+
+    <TextView
+        style="@style/content_style"
+        android:layout_marginTop="5dp"
+        android:text="SIM卡变更后" />
+
+    <TextView
+        style="@style/content_style"
+        android:layout_marginTop="5dp"
+        android:text="报警短信会发送给安全号码" />
+
+    <EditText
+        android:id="@+id/et_safe_set_safecontact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/testString"
-        android:textSize="20sp"/>
+        android:hint="请输入或选择安全号码"
+        android:inputType="phone"
+        android:singleLine="true" />
 
+    <Button
+        android:id="@+id/btn_safe_select_safecontact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_selector"
+        android:text="选择联系人"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:src="@drawable/safe_set_guide3" />
 
 </LinearLayout>

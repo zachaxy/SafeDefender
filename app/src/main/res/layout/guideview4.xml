@@ -5,7 +5,29 @@
     android:orientation="vertical">
 
     <TextView
+        style="@style/top_title"
+        android:text="@string/top_safe_guide4" />
+
+    <CheckBox
+        android:layout_marginTop="20dp"
+        android:id="@+id/cb_safe_set_protect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="防盗保护没有开启" />
+
+
+    <ImageView
+        android:padding="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:src="@drawable/safe_set_guide4" />
+
+    <Button
+        android:id="@+id/btn_safe_set_finish"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/testString" />
+        android:background="@drawable/button_selector"
+        android:text="设置完毕"/>
+
 </LinearLayout>

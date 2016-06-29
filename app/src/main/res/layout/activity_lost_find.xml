@@ -1,12 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="com.zachaxy.safedefender.ui.LostFindActivity">
 
     <TextView
+        android:id="@+id/tv_lf_top"
         style="@style/top_title"
-        android:text="@string/top_safe" />
-</LinearLayout>
+        android:layout_marginBottom="10dp"
+        android:text="@string/top_lost_find" />
+
+    <TextView
+        android:id="@+id/tv_lf_1"
+        style="@style/content_style"
+        android:layout_below="@id/tv_lf_top"
+        android:text="安全号码" />
+
+    <TextView
+        android:id="@+id/tv_lf_2"
+        style="@style/content_style"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/tv_lf_top"
+        android:text="12345678901"
+        android:textColor="@color/blue" />
+
+    <ImageView
+        android:id="@+id/img_lf_line1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_lf_1"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/divider_line" />
+
+    <TextView
+        android:id="@+id/tv_lf_3"
+        style="@style/content_style"
+        android:layout_below="@id/img_lf_line1"
+        android:text="放到保护是否开启" />
+
+    <ImageView
+        android:id="@+id/ibtn_lf_isOpenProtect"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/img_lf_line1"
+        android:layout_margin="3dp"
+        android:src="@drawable/unlock" />
+
+    <ImageView
+        android:id="@+id/img_lf_line2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_lf_3"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/divider_line" />
+
+    <TextView
+        android:background="@drawable/shape_selector"
+        android:clickable="true"
+        android:onClick="reEnterSafeGuide"
+        android:id="@+id/tv_lf_reguide"
+        style="@style/content_style"
+        android:layout_below="@id/img_lf_line2"
+        android:text="重新进入设置向导" />
+
+    <ImageView
+        android:id="@+id/img_lf_line3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_lf_reguide"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/divider_line" />
+
+    <TextView
+        android:id="@+id/tv_lf_4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/img_lf_line3"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/green"
+        android:text="功能简介"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tv_lf_5"
+        style="@style/content_style"
+        android:layout_below="@id/tv_lf_4"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@android:drawable/star_on"
+        android:gravity="center"
+        android:text="GPS追踪" />
+
+    <TextView
+        android:id="@+id/tv_lf_6"
+        style="@style/content_style"
+        android:layout_below="@id/tv_lf_5"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@android:drawable/star_on"
+        android:gravity="center"
+        android:text="播放报警音乐" />
+
+    <TextView
+        android:id="@+id/tv_lf_7"
+        style="@style/content_style"
+        android:layout_below="@id/tv_lf_6"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@android:drawable/star_on"
+        android:gravity="center"
+        android:text="远程删除数据" />
+
+    <TextView
+        android:id="@+id/tv_lf_8"
+        style="@style/content_style"
+        android:layout_below="@id/tv_lf_7"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@android:drawable/star_on"
+        android:gravity="center"
+        android:text="远程锁屏" />
+</RelativeLayout>

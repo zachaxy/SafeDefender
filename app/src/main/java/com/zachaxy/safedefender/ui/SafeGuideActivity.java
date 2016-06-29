@@ -1,12 +1,14 @@
 package com.zachaxy.safedefender.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,6 +35,7 @@ public class SafeGuideActivity extends Activity {
 
     private ImageView mGuideTip0, mGuideTip1, mGuideTip2, mGuideTip3;
 
+    private boolean isScrollable = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +59,17 @@ public class SafeGuideActivity extends Activity {
 
     private void initEvents() {
         LayoutInflater inflater = getLayoutInflater();
+
         mGuideView1 = inflater.inflate(R.layout.guideview1, null);
+
         mGuideView2 = inflater.inflate(R.layout.guideview2, null);
+        initGuide2();
 
         mGuideView3 = inflater.inflate(R.layout.guideview3, null);
+        initGuide3();
+
         mGuideView4 = inflater.inflate(R.layout.guideview4, null);
+        initGuide4();
 
         mGuideViews = new ArrayList<>();
         mGuideViews.add(mGuideView1);
@@ -107,7 +116,9 @@ public class SafeGuideActivity extends Activity {
             }
 
             /***
-             * 当一个新的page滑动进来,传入其position
+             * 当一个新的page滑动进来,传入其position,
+             * 先判断是否设置过,然后在第二个索引处第三个索引处决定事都要置其为false;
+             * 防止用户设置了第二页进入第三页后再次进入第三页,导致无法滑动.
              * @param position
              */
             @Override
@@ -180,4 +191,26 @@ public class SafeGuideActivity extends Activity {
     }
 
 
+
+
+    private void initGuide2() {
+
+    }
+
+    private void initGuide3() {
+
+    }
+
+    private void initGuide4() {
+        Button finishSet;
+        finishSet = (Button) mGuideView4.findViewById(R.id.btn_safe_set_finish);
+        finishSet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SafeGuideActivity.this,LostFindActivity.class));
+                finish();
+                //TODO:标记设置完成,下次就不再显示引导页了,此功能暂时不开放
+            }
+        });
+    }
 }
