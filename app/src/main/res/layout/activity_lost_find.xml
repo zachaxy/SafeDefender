@@ -37,7 +37,7 @@
         android:id="@+id/tv_lf_3"
         style="@style/content_style"
         android:layout_below="@id/img_lf_line1"
-        android:text="放到保护是否开启" />
+        android:text="防盗保护是否开启" />
 
     <ImageView
         android:id="@+id/ibtn_lf_isOpenProtect"

@@ -18,10 +18,12 @@ public class SafeGuideViewPager extends ViewPager {
 
     private int index;
 
-    private String[] tipStr = {"","请先绑定SIM卡","请先设置安全号码",""};
+    private String[] tipStr = {"0","请先绑定SIM卡","请先设置安全号码","3"};
 
     //如果这是为flase,那么不可以向右翻页
     private boolean isScrollable = true;
+
+    private boolean once = true;
 
     public SafeGuideViewPager(Context context) {
         super(context);
@@ -36,11 +38,15 @@ public class SafeGuideViewPager extends ViewPager {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+      /*  if (getCurrentItem()==0){
+            isScrollable = true;
+        }*/
         if (!isScrollable) {
             switch (ev.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     //beforeX = ev.getX();
                     beforeX = ev.getRawX();
+                    System.out.println("down---"+beforeX);
                     //System.out.println("beforeX:" + beforeX);
                     break;
                 case MotionEvent.ACTION_MOVE:
@@ -48,7 +54,7 @@ public class SafeGuideViewPager extends ViewPager {
                     //float motionValue = ev.getX() - beforeX;
                     float motionValue = currentX - beforeX;
                     //System.out.println(beforeX+ "<---->" + ev.getX() );
-                    //System.out.println(beforeX + "<---->" + currentX);
+                    System.out.println(beforeX + "<---->" + currentX);
                     if (currentX < 0) {
                         //System.out.println("发送终止触摸事件");
                         //这是系统的一个bug.
@@ -61,19 +67,26 @@ public class SafeGuideViewPager extends ViewPager {
                     } else {
                         beforeX = currentX;
                     }
-                    if (motionValue <= 0) {
+                    if (motionValue < 0) {
                         //表明想看下一张page.
                         //System.out.println("左滑");
-                        Toast.makeText(context,tipStr[index],Toast.LENGTH_SHORT).show();
+                        if(once){
+                            Toast.makeText(context,tipStr[index],Toast.LENGTH_SHORT).show();
+                            once = false;
+                        }
+                        System.out.println(tipStr[index]);
+                        ev.setAction(MotionEvent.ACTION_CANCEL);
+                        onInterceptTouchEvent(ev);
                         //肯定要返回true,因为如果返回false,那么其他的MotionEvent_MOVE,UP等都不会被执行.
                         //这里直接返回了true,是不处理本次的动作move到up之间的逻辑.
                         //向左滑动到边缘时,得到的valueX可能是负数,应该是系统的问题.
-                        return true;
+                        return false;
                     }
                     break;
                 case MotionEvent.ACTION_UP:
-                    //System.out.println("up: " + beforeX);
+                    System.out.println("up: " + beforeX);
                     beforeX = 0.0f;
+                    once = true;
                     break;
                 default:
                     break;

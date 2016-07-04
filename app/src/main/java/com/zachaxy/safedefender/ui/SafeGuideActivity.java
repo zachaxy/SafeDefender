@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.telephony.TelephonyManager;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +17,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.zachaxy.safedefender.R;
@@ -121,8 +122,7 @@ public class SafeGuideActivity extends Activity {
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                //System.out.println("未知?"+position+"<->"+positionOffset+"<->"+positionOffsetPixels);
-
+                System.out.println("未知?" + position + "<->" + positionOffset + "<->" + positionOffsetPixels);
             }
 
             /***
@@ -140,12 +140,24 @@ public class SafeGuideActivity extends Activity {
                 switch (position) {
                     case 0:
                         mGuideTip0.setImageResource(R.drawable.tip_focused);
+                        mSafeGuidePages.setScrollable(true);
                         break;
                     case 1:
                         mGuideTip1.setImageResource(R.drawable.tip_focused);
+                        if (((SettingItemView) mGuideView2.findViewById(R.id.guide_bind_sim)).isCheck()) {
+                            ableScroll(1);
+                        } else {
+                            unableScroll(1);
+                        }
                         break;
                     case 2:
                         mGuideTip2.setImageResource(R.drawable.tip_focused);
+                        if (TextUtils.isEmpty(((EditText) mGuideView3.findViewById(R.id.et_safe_set_safecontact)).getText())) {
+                            unableScroll(2);
+
+                        } else {
+                            ableScroll(2);
+                        }
                         break;
                     case 3:
                         mGuideTip3.setImageResource(R.drawable.tip_focused);
@@ -174,6 +186,7 @@ public class SafeGuideActivity extends Activity {
             case R.id.img_safe_guide_tip0:
                 mSafeGuidePages.setCurrentItem(0);
                 mGuideTip0.setImageResource(R.drawable.tip_focused);
+                mSafeGuidePages.setScrollable(true);
                 break;
             case R.id.img_safe_guide_tip1:
                 mSafeGuidePages.setCurrentItem(1);
@@ -186,8 +199,8 @@ public class SafeGuideActivity extends Activity {
             case R.id.img_safe_guide_tip3:
                 mSafeGuidePages.setCurrentItem(3);
                 mGuideTip3.setImageResource(R.drawable.tip_focused);
+                mSafeGuidePages.setScrollable(true);
                 break;
-
             default:
                 break;
         }
@@ -207,8 +220,10 @@ public class SafeGuideActivity extends Activity {
         //先初始化布局,判断是否绑定了sim卡,如果未绑定过sim卡,那么设置为未勾选状态,如果设置过,那么设置为勾选状态.
         if (TextUtils.isEmpty(sim)) {
             bindSIM.setCheck(false);
+            unableScroll(1);
         } else {
             bindSIM.setCheck(true);
+            ableScroll(1);
         }
         bindSIM.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -216,6 +231,7 @@ public class SafeGuideActivity extends Activity {
                 if (bindSIM.isCheck()) {
                     bindSIM.setCheck(false);
                     mPref.edit().remove("SimSerial").commit();
+                    unableScroll(1);
                 } else {
                     bindSIM.setCheck(true);
                     //这里还要保存sim卡的信息
@@ -223,18 +239,42 @@ public class SafeGuideActivity extends Activity {
                     String simSerial = tm.getSimSerialNumber();
                     System.out.println("sim卡的序列号是:" + simSerial);
                     mPref.edit().putString("SimSerial", simSerial).commit();
+                    ableScroll(1);
                 }
             }
         });
     }
 
     private void initGuide3() {
+        EditText mSafeNumber = (EditText) mGuideView3.findViewById(R.id.et_safe_set_safecontact);
+        mSafeNumber.setText(mPref.getString("safe_number", ""));
+        mSafeNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                System.out.println("afterTextChanged" + s.toString());
+                if (TextUtils.isEmpty(s.toString())) {
+                    unableScroll(2);
+                } else {
+                    ableScroll(2);
+                }
+                mPref.edit().putString("safe_number", s.toString()).commit();
+            }
+        });
         Button mSelectContact = (Button) mGuideView3.findViewById(R.id.btn_safe_select_safecontact);
         mSelectContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //startActivity(new Intent(SafeGuideActivity.this,ContactActivity.class));
-                startActivityForResult(new Intent(SafeGuideActivity.this,ContactActivity.class),1);
+                startActivityForResult(new Intent(SafeGuideActivity.this, ContactActivity.class), 1);
             }
         });
     }
@@ -254,12 +294,50 @@ public class SafeGuideActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode){
+        switch (requestCode) {
             case 1:
-                if(resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     String number = data.getStringExtra("number");
-                    ((EditText)mGuideView3.findViewById(R.id.et_safe_set_safecontact)).setText(number);
+                    ((EditText) mGuideView3.findViewById(R.id.et_safe_set_safecontact)).setText(number);
+                    if (!TextUtils.isEmpty(number)) {
+                        mPref.edit().putString("safe_number", number).commit();
+                        ableScroll(2);
+                    } else {
+                        unableScroll(2);
+                    }
                 }
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void unableScroll(int index) {
+        if (mSafeGuidePages.getCurrentItem() == index) {
+            mSafeGuidePages.setScrollable(false);
+            mSafeGuidePages.setIndex(index);
+        }
+
+        switch (index) {
+            case 1:
+                mGuideTip2.setEnabled(false);
+            case 2:
+                mGuideTip3.setEnabled(false);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void ableScroll(int index) {
+        if (mSafeGuidePages.getCurrentItem() == index){
+            mSafeGuidePages.setScrollable(true);
+        }
+        switch (index) {
+            case 1:
+                mGuideTip2.setEnabled(true);
+            case 2:
+                mGuideTip3.setEnabled(true);
                 break;
             default:
                 break;
