@@ -2,26 +2,33 @@ package com.zachaxy.safedefender.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.zachaxy.safedefender.R;
 import com.zachaxy.safedefender.widget.SafeGuideViewPager;
+import com.zachaxy.safedefender.widget.SettingItemView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 /***
-
+ * 用于用户设置向导,绑定sim卡等操作
+ * 用到的知识点:自定义ViewPager
  */
 public class SafeGuideActivity extends Activity {
 
@@ -37,10 +44,13 @@ public class SafeGuideActivity extends Activity {
 
     private boolean isScrollable = true;
 
+    private SharedPreferences mPref;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_safe_guide);
+        mPref = getSharedPreferences("config", MODE_PRIVATE);
         initViews();
         initEvents();
     }
@@ -191,14 +201,42 @@ public class SafeGuideActivity extends Activity {
     }
 
 
-
-
     private void initGuide2() {
-
+        final SettingItemView bindSIM = (SettingItemView) mGuideView2.findViewById(R.id.guide_bind_sim);
+        String sim = mPref.getString("SimSerial", null);
+        //先初始化布局,判断是否绑定了sim卡,如果未绑定过sim卡,那么设置为未勾选状态,如果设置过,那么设置为勾选状态.
+        if (TextUtils.isEmpty(sim)) {
+            bindSIM.setCheck(false);
+        } else {
+            bindSIM.setCheck(true);
+        }
+        bindSIM.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (bindSIM.isCheck()) {
+                    bindSIM.setCheck(false);
+                    mPref.edit().remove("SimSerial").commit();
+                } else {
+                    bindSIM.setCheck(true);
+                    //这里还要保存sim卡的信息
+                    TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+                    String simSerial = tm.getSimSerialNumber();
+                    System.out.println("sim卡的序列号是:" + simSerial);
+                    mPref.edit().putString("SimSerial", simSerial).commit();
+                }
+            }
+        });
     }
 
     private void initGuide3() {
-
+        Button mSelectContact = (Button) mGuideView3.findViewById(R.id.btn_safe_select_safecontact);
+        mSelectContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //startActivity(new Intent(SafeGuideActivity.this,ContactActivity.class));
+                startActivityForResult(new Intent(SafeGuideActivity.this,ContactActivity.class),1);
+            }
+        });
     }
 
     private void initGuide4() {
@@ -207,10 +245,24 @@ public class SafeGuideActivity extends Activity {
         finishSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(SafeGuideActivity.this,LostFindActivity.class));
+                startActivity(new Intent(SafeGuideActivity.this, LostFindActivity.class));
                 finish();
                 //TODO:标记设置完成,下次就不再显示引导页了,此功能暂时不开放
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case 1:
+                if(resultCode == RESULT_OK){
+                    String number = data.getStringExtra("number");
+                    ((EditText)mGuideView3.findViewById(R.id.et_safe_set_safecontact)).setText(number);
+                }
+                break;
+            default:
+                break;
+        }
     }
 }

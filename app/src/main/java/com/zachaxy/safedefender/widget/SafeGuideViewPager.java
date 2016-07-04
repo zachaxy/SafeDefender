@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
 /**
  * Created by zhangxin on 2016/6/24.
@@ -13,21 +14,28 @@ import android.view.MotionEvent;
 public class SafeGuideViewPager extends ViewPager {
     private float beforeX;
 
+    private Context context;
+
+    private int index;
+
+    private String[] tipStr = {"","请先绑定SIM卡","请先设置安全号码",""};
+
     //如果这是为flase,那么不可以向右翻页
     private boolean isScrollable = true;
 
     public SafeGuideViewPager(Context context) {
         super(context);
+        this.context = context;
     }
 
     public SafeGuideViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.context = context;
     }
 
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-
         if (!isScrollable) {
             switch (ev.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -43,6 +51,7 @@ public class SafeGuideViewPager extends ViewPager {
                     //System.out.println(beforeX + "<---->" + currentX);
                     if (currentX < 0) {
                         //System.out.println("发送终止触摸事件");
+                        //这是系统的一个bug.
                         beforeX = 0;
                         //这里手动发送一个up的事件,供onInterceptTouchEvent(ev)方法来终止动作.
                         ev.setAction(MotionEvent.ACTION_UP);
@@ -55,6 +64,7 @@ public class SafeGuideViewPager extends ViewPager {
                     if (motionValue <= 0) {
                         //表明想看下一张page.
                         //System.out.println("左滑");
+                        Toast.makeText(context,tipStr[index],Toast.LENGTH_SHORT).show();
                         //肯定要返回true,因为如果返回false,那么其他的MotionEvent_MOVE,UP等都不会被执行.
                         //这里直接返回了true,是不处理本次的动作move到up之间的逻辑.
                         //向左滑动到边缘时,得到的valueX可能是负数,应该是系统的问题.
@@ -125,5 +135,9 @@ public class SafeGuideViewPager extends ViewPager {
 
     public boolean isScrollable() {
         return isScrollable;
+    }
+
+    public void setIndex(int i){
+        index = i;
     }
 }
