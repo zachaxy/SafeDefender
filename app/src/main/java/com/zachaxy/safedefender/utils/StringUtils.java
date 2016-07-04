@@ -65,7 +65,15 @@ public class StringUtils {
         updateInfo = new UpdateInfo(versionName, versionCode, description, downloadUrl);
         Log.d("###", "parseJsonWithJSONObject: " + versionName + "---" + versionCode + "---" + description + "---" + downloadUrl);
 
-    return updateInfo;
-}
+        return updateInfo;
+    }
 
+
+    public static String formatPhoneNumber(String phoneNumber){
+        if (phoneNumber.startsWith("+86")) {
+            phoneNumber = phoneNumber.substring(3);
+        }
+        phoneNumber = phoneNumber.replaceAll("-", "").replaceAll(" ", "");
+        return phoneNumber;
+    }
 }

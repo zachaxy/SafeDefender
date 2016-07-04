@@ -22,10 +22,11 @@
         android:id="@+id/et_safe_set_safecontact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:digits="1234567890"
         android:hint="请输入或选择安全号码"
-        android:inputType="phone"
+        android:inputType="number"
         android:singleLine="true" />
-
+    <!--android:inputType="phone"-->
     <Button
         android:id="@+id/btn_safe_select_safecontact"
         android:layout_width="match_parent"

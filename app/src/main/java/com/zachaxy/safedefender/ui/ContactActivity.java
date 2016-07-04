@@ -117,11 +117,12 @@ public class ContactActivity extends Activity {
         TextView number;
     }
 
+    //如果是按back键返回,那么将标志设置为RESULT_CANCELED,这样在回调方法里,不对其进行处理.
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
         intent.putExtra("number", "");
-        setResult(RESULT_OK, intent);
+        setResult(RESULT_CANCELED, intent);
         finish();
     }
 }

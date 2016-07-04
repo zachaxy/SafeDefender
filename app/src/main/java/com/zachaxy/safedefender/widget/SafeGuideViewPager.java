@@ -18,7 +18,7 @@ public class SafeGuideViewPager extends ViewPager {
 
     private int index;
 
-    private String[] tipStr = {"0","请先绑定SIM卡","请先设置安全号码","3"};
+    private String[] tipStr = {"0","请先绑定SIM卡","请设置安全号码","安全号码格式错误,请重新设置"};
 
     //如果这是为flase,那么不可以向右翻页
     private boolean isScrollable = true;
@@ -38,9 +38,6 @@ public class SafeGuideViewPager extends ViewPager {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-      /*  if (getCurrentItem()==0){
-            isScrollable = true;
-        }*/
         if (!isScrollable) {
             switch (ev.getAction()) {
                 case MotionEvent.ACTION_DOWN:

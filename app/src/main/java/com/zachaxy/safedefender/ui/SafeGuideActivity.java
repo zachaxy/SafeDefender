@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -18,8 +19,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zachaxy.safedefender.R;
+import com.zachaxy.safedefender.utils.JudgeUtils;
+import com.zachaxy.safedefender.utils.StringUtils;
 import com.zachaxy.safedefender.widget.SafeGuideViewPager;
 import com.zachaxy.safedefender.widget.SettingItemView;
 
@@ -43,9 +47,11 @@ public class SafeGuideActivity extends Activity {
 
     private ImageView mGuideTip0, mGuideTip1, mGuideTip2, mGuideTip3;
 
-    private boolean isScrollable = true;
-
     private SharedPreferences mPref;
+
+    //----------------
+    int inType;
+    int index = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,10 +158,12 @@ public class SafeGuideActivity extends Activity {
                         break;
                     case 2:
                         mGuideTip2.setImageResource(R.drawable.tip_focused);
-                        if (TextUtils.isEmpty(((EditText) mGuideView3.findViewById(R.id.et_safe_set_safecontact)).getText())) {
+                        String s = ((EditText) mGuideView3.findViewById(R.id.et_safe_set_safecontact)).getText().toString();
+                        if (TextUtils.isEmpty(s)) {
                             unableScroll(2);
-
-                        } else {
+                        }else if(s.length()<11){
+                            unableScroll(3);
+                        }else if(JudgeUtils.isMobileNO(s)) {
                             ableScroll(2);
                         }
                         break;
@@ -246,8 +254,47 @@ public class SafeGuideActivity extends Activity {
     }
 
     private void initGuide3() {
-        EditText mSafeNumber = (EditText) mGuideView3.findViewById(R.id.et_safe_set_safecontact);
+        final EditText mSafeNumber = (EditText) mGuideView3.findViewById(R.id.et_safe_set_safecontact);
         mSafeNumber.setText(mPref.getString("safe_number", ""));
+       /* mSafeNumber.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_OUTSIDE){
+                    //mSafeNumber.setFocusable(false);
+                    System.out.println("出界了");
+                    mGuideTip2.requestFocus();
+                }
+                return false;
+            }
+        });*/
+       /* mSafeNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(index == 0){
+                    inType = mSafeNumber.getInputType(); // backup the input type
+                    mSafeNumber.setInputType(1); // disable soft input
+                    mSafeNumber.setFocusableInTouchMode(false);
+                    mSafeNumber.clearFocus();
+                    index = 1;
+                }else if(index == 1){
+                    mSafeNumber.setInputType(inType); // restore input type
+                    mSafeNumber.setFocusableInTouchMode(true);
+                    mSafeNumber.requestFocus();
+                    index = 0;
+                }
+            }
+        });*/
+       /* mSafeNumber.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus){
+                    System.out.println("失去焦点");
+                }else{
+                    System.out.println("得到交点");
+                }
+            }
+        });*/
+
         mSafeNumber.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -262,12 +309,16 @@ public class SafeGuideActivity extends Activity {
             @Override
             public void afterTextChanged(Editable s) {
                 System.out.println("afterTextChanged" + s.toString());
-                if (TextUtils.isEmpty(s.toString())) {
-                    unableScroll(2);
-                } else {
+                String number = s.toString();
+
+                if (number.length() == 11 && JudgeUtils.isMobileNO(number)) {
+                    mPref.edit().putString("safe_number", s.toString()).commit();
                     ableScroll(2);
+                } else if(number.length() == 0){
+                    unableScroll(2);
+                }else{
+                    unableScroll(3);
                 }
-                mPref.edit().putString("safe_number", s.toString()).commit();
             }
         });
         Button mSelectContact = (Button) mGuideView3.findViewById(R.id.btn_safe_select_safecontact);
@@ -298,13 +349,7 @@ public class SafeGuideActivity extends Activity {
             case 1:
                 if (resultCode == RESULT_OK) {
                     String number = data.getStringExtra("number");
-                    ((EditText) mGuideView3.findViewById(R.id.et_safe_set_safecontact)).setText(number);
-                    if (!TextUtils.isEmpty(number)) {
-                        mPref.edit().putString("safe_number", number).commit();
-                        ableScroll(2);
-                    } else {
-                        unableScroll(2);
-                    }
+                    setSafeNumber(number);
                 }
                 break;
             default:
@@ -318,10 +363,16 @@ public class SafeGuideActivity extends Activity {
             mSafeGuidePages.setIndex(index);
         }
 
+        if(index==3 && mSafeGuidePages.getCurrentItem() == 2){
+            mSafeGuidePages.setScrollable(false);
+            mSafeGuidePages.setIndex(index);
+        }
+
         switch (index) {
             case 1:
                 mGuideTip2.setEnabled(false);
             case 2:
+            case 3:
                 mGuideTip3.setEnabled(false);
                 break;
             default:
@@ -330,17 +381,33 @@ public class SafeGuideActivity extends Activity {
     }
 
     private void ableScroll(int index) {
-        if (mSafeGuidePages.getCurrentItem() == index){
+        if (mSafeGuidePages.getCurrentItem() == index) {
             mSafeGuidePages.setScrollable(true);
         }
         switch (index) {
             case 1:
                 mGuideTip2.setEnabled(true);
             case 2:
+            case 3:
                 mGuideTip3.setEnabled(true);
                 break;
             default:
                 break;
         }
+    }
+
+    private void setSafeNumber(String phoneNumber) {
+        String number = StringUtils.formatPhoneNumber(phoneNumber);
+        //TODO:合法性检验留给EditText开处理.
+        ((EditText) mGuideView3.findViewById(R.id.et_safe_set_safecontact)).setText(number);
+        /*if (JudgeUtils.isMobileNO(number)) {
+            ((EditText) mGuideView3.findViewById(R.id.et_safe_set_safecontact)).setText(number);
+            //mPref.edit().putString("safe_number", number).commit();
+            //ableScroll(2);
+        } else {
+            ((EditText) mGuideView3.findViewById(R.id.et_safe_set_safecontact)).setText(phoneNumber);
+            Toast.makeText(this, "非法的手机号码:" + phoneNumber + ",请重新输入", Toast.LENGTH_SHORT).show();
+            unableScroll(2);
+        }*/
     }
 }
