@@ -1,13 +1,20 @@
 package com.zachaxy.safedefender.receiver;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.SmsMessage;
 
 import com.zachaxy.safedefender.R;
+import com.zachaxy.safedefender.service.LocationService;
 
 /**
  * Created by zhangxin on 2016/7/6.
@@ -46,6 +53,9 @@ public class SmsReceiver extends BroadcastReceiver {
 
         switch (content) {
             case "#*location*#":
+                //开启定位的服务
+                context.startService(new Intent(context, LocationService.class));
+
                 break;
             case "#*alarm*#":
                 MediaPlayer player = MediaPlayer.create(context, R.raw.ylzs);
@@ -62,4 +72,8 @@ public class SmsReceiver extends BroadcastReceiver {
                 break;
         }
     }
+
+
 }
+
+
