@@ -2,11 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.zachaxy.safedefender">
 
-    <!-- 一下分别添加了访问网络,读取SIM卡信息,开机广播,读取联系人信息 -->
+    <!-- 一下分别添加了访问网络,读取SIM卡信息,开机广播,读取联系人信息,发送短信,接收短信 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
     <application
         android:allowBackup="true"
@@ -25,7 +27,7 @@
         <activity android:name=".ui.SettingActivity" />
         <activity android:name=".ui.LostFindActivity" />
         <activity android:name=".ui.SafeGuideActivity" />
-        <activity android:name=".ui.ContactActivity"/>
+        <activity android:name=".ui.ContactActivity" />
 
         <receiver android:name=".receiver.BootStartReceiver">
             <intent-filter>
@@ -33,6 +35,11 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".receiver.SmsReceiver">
+            <intent-filter android:priority="1000">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

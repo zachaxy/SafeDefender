@@ -18,11 +18,10 @@
         android:text="安全号码" />
 
     <TextView
-        android:id="@+id/tv_lf_2"
+        android:id="@+id/tv_lf_safeNumber"
         style="@style/content_style"
         android:layout_alignParentRight="true"
         android:layout_below="@id/tv_lf_top"
-        android:text="12345678901"
         android:textColor="@color/blue" />
 
     <ImageView
@@ -45,8 +44,7 @@
         android:layout_height="25dp"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/img_lf_line1"
-        android:layout_margin="3dp"
-        android:src="@drawable/unlock" />
+        android:layout_margin="3dp" />
 
     <ImageView
         android:id="@+id/img_lf_line2"
@@ -57,12 +55,12 @@
         android:src="@drawable/divider_line" />
 
     <TextView
-        android:background="@drawable/shape_selector"
-        android:clickable="true"
-        android:onClick="reEnterSafeGuide"
         android:id="@+id/tv_lf_reguide"
         style="@style/content_style"
         android:layout_below="@id/img_lf_line2"
+        android:background="@drawable/shape_selector"
+        android:clickable="true"
+        android:onClick="reEnterSafeGuide"
         android:text="重新进入设置向导" />
 
     <ImageView
@@ -92,7 +90,7 @@
         android:layout_marginTop="10dp"
         android:drawableLeft="@android:drawable/star_on"
         android:gravity="center"
-        android:text="GPS追踪" />
+        android:text="GPS追踪:#*location*#" />
 
     <TextView
         android:id="@+id/tv_lf_6"
@@ -102,7 +100,7 @@
         android:layout_marginTop="10dp"
         android:drawableLeft="@android:drawable/star_on"
         android:gravity="center"
-        android:text="播放报警音乐" />
+        android:text="播放报警音乐:#*alarm*#" />
 
     <TextView
         android:id="@+id/tv_lf_7"
@@ -112,7 +110,7 @@
         android:layout_marginTop="10dp"
         android:drawableLeft="@android:drawable/star_on"
         android:gravity="center"
-        android:text="远程删除数据" />
+        android:text="远程删除数据:#*wipedata*#" />
 
     <TextView
         android:id="@+id/tv_lf_8"
@@ -122,5 +120,5 @@
         android:layout_marginTop="10dp"
         android:drawableLeft="@android:drawable/star_on"
         android:gravity="center"
-        android:text="远程锁屏" />
+        android:text="远程锁屏:#*lockscreen*#" />
 </RelativeLayout>

@@ -15,6 +15,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -161,9 +163,9 @@ public class SafeGuideActivity extends Activity {
                         String s = ((EditText) mGuideView3.findViewById(R.id.et_safe_set_safecontact)).getText().toString();
                         if (TextUtils.isEmpty(s)) {
                             unableScroll(2);
-                        }else if(s.length()<11){
+                        } else if (s.length() < 11) {
                             unableScroll(3);
-                        }else if(JudgeUtils.isMobileNO(s)) {
+                        } else if (JudgeUtils.isMobileNO(s)) {
                             ableScroll(2);
                         }
                         break;
@@ -314,9 +316,9 @@ public class SafeGuideActivity extends Activity {
                 if (number.length() == 11 && JudgeUtils.isMobileNO(number)) {
                     mPref.edit().putString("safe_number", s.toString()).commit();
                     ableScroll(2);
-                } else if(number.length() == 0){
+                } else if (number.length() == 0) {
                     unableScroll(2);
-                }else{
+                } else {
                     unableScroll(3);
                 }
             }
@@ -331,6 +333,28 @@ public class SafeGuideActivity extends Activity {
     }
 
     private void initGuide4() {
+        final CheckBox openProteck = (CheckBox) mGuideView4.findViewById(R.id.cb_safe_set_protect);
+        boolean isProtect = mPref.getBoolean("protect", false);
+        if (isProtect) {
+            openProteck.setText("防盗保护已经开启");
+        } else {
+            openProteck.setText("防盗保护已经关闭");
+        }
+        openProteck.setChecked(isProtect);
+        openProteck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    openProteck.setText("防盗保护已经开启");
+                    mPref.edit().putBoolean("protect", true).commit();
+                } else {
+                    openProteck.setText("防盗保护已经关闭");
+                    mPref.edit().putBoolean("protect", false).commit();
+                }
+            }
+        });
+
+
         Button finishSet;
         finishSet = (Button) mGuideView4.findViewById(R.id.btn_safe_set_finish);
         finishSet.setOnClickListener(new View.OnClickListener() {
@@ -338,7 +362,7 @@ public class SafeGuideActivity extends Activity {
             public void onClick(View v) {
                 startActivity(new Intent(SafeGuideActivity.this, LostFindActivity.class));
                 finish();
-                //TODO:标记设置完成,下次就不再显示引导页了,此功能暂时不开放
+                mPref.edit().putBoolean("configed",true).commit();
             }
         });
     }
@@ -363,7 +387,7 @@ public class SafeGuideActivity extends Activity {
             mSafeGuidePages.setIndex(index);
         }
 
-        if(index==3 && mSafeGuidePages.getCurrentItem() == 2){
+        if (index == 3 && mSafeGuidePages.getCurrentItem() == 2) {
             mSafeGuidePages.setScrollable(false);
             mSafeGuidePages.setIndex(index);
         }
