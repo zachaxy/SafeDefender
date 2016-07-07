@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.zachaxy.safedefender.ui.AddressActivity">
+
+    <TextView
+        android:id="@+id/tv_addr_top"
+        style="@style/top_title"
+        android:text="归属地查询" />
+
+    <EditText
+        android:id="@+id/et_addr_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_addr_top"
+        android:digits="1234567890"
+        android:hint="请输入要查询的号码"
+        android:inputType="number"
+        android:singleLine="true" />
+
+    <Button
+        android:id="@+id/btn_addr_query"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_addr_number"
+        android:onClick="query"
+        android:text="查询" />
+
+    <TextView
+        android:id="@+id/tv_addr_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_addr_query"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="5dp"
+        android:text="查询结果:"
+        android:textSize="20sp" />
+</RelativeLayout>

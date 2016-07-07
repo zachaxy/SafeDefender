@@ -24,6 +24,8 @@ import com.zachaxy.safedefender.utils.StringUtils;
 
 import org.json.JSONException;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -95,6 +97,9 @@ public class SplashActivity extends Activity {
         mCountDownTV = (TextView) findViewById(R.id.tv_countDown);
         mTVDownload = (TextView) findViewById(R.id.tv_progress);
         mPBDownload = (ProgressBar) findViewById(R.id.pb_download);
+
+        //拷贝归属地数据库
+        copyDB("address.db");
 
         if (getSharedPreferences("config", MODE_PRIVATE).getBoolean("auto_update", true)) {
             checkVersion();
@@ -300,5 +305,42 @@ public class SplashActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         enterHome();
+    }
+
+    private void copyDB(String dbName) {
+        //getFilesDir()--->data/data/com.zachaxy.safedefender/files/
+        File destFile = new File(getFilesDir(), dbName);
+        if (destFile.exists()) {
+            return;
+        }
+        InputStream in = null;
+        FileOutputStream out = null;
+        try {
+            in = getAssets().open("address.db");
+            out = new FileOutputStream(destFile);
+            int len = 0;
+            byte[] buf = new byte[1024];
+            while ((len = in.read(buf)) != -1) {
+                out.write(buf, 0, len);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

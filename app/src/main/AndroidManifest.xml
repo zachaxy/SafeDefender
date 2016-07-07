@@ -36,13 +36,11 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
         <receiver android:name=".receiver.SmsReceiver">
             <intent-filter android:priority="1000">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".receiver.AdminReceiver"
             android:description="@string/sample_device_admin_description"
@@ -51,12 +49,16 @@
             <meta-data
                 android:name="android.app.device_admin"
                 android:resource="@xml/device_admin_safedefender" />
+
             <intent-filter>
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
             </intent-filter>
         </receiver>
 
-        <service android:name=".service.LocationService"></service>
+        <service android:name=".service.LocationService" />
+
+        <activity android:name=".ui.AdvanceToolActivity" />
+        <activity android:name=".ui.AddressActivity"></activity>
     </application>
 
 </manifest>

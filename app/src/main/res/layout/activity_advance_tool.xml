@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.zachaxy.safedefender.ui.AdvanceToolActivity">
+
+    <TextView
+        android:id="@+id/tv_at_top"
+        style="@style/top_title"
+        android:background="@color/green"
+        android:text="高级工具" />
+
+    <TextView
+        android:id="@+id/tv_at_queryOwnership"
+        style="@style/content_style"
+        android:layout_below="@id/tv_at_top"
+        android:background="@drawable/click_selector"
+        android:clickable="true"
+        android:drawableLeft="@drawable/query_ownship"
+        android:drawablePadding="5dp"
+        android:gravity="center"
+        android:onClick="queryOwnership"
+        android:text="电话归属地查询" />
+
+    <TextView
+        android:id="@+id/tv_at_queryCommon"
+        style="@style/content_style"
+        android:layout_below="@id/tv_at_queryOwnership"
+        android:background="@drawable/click_selector"
+        android:clickable="true"
+        android:drawableLeft="@drawable/query_common"
+        android:drawablePadding="5dp"
+        android:gravity="center"
+        android:onClick="queryCommonpNumber"
+        android:text="常用号码查询" />
+
+    <TextView
+        android:id="@+id/tv_at_msg_backup"
+        style="@style/content_style"
+        android:layout_below="@id/tv_at_queryCommon"
+        android:background="@drawable/click_selector"
+        android:clickable="true"
+        android:drawableLeft="@drawable/msg_backup"
+        android:drawablePadding="5dp"
+        android:gravity="center"
+        android:onClick="backupMSG"
+        android:text="短信云备份" />
+
+    <TextView
+        android:id="@+id/tv_at_app_lock"
+        style="@style/content_style"
+        android:layout_below="@id/tv_at_msg_backup"
+        android:background="@drawable/click_selector"
+        android:clickable="true"
+        android:drawableLeft="@drawable/app_lock"
+        android:drawablePadding="5dp"
+        android:gravity="center"
+        android:onClick="lockApp"
+        android:text="程序加密锁" />
+</RelativeLayout>

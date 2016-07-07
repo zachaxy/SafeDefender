@@ -71,6 +71,9 @@ public class HomeActivity extends Activity {
                     case 0:
                         showSafePasswordDialog();
                         break;
+                    case 7:
+                        startActivity(new Intent(HomeActivity.this, AdvanceToolActivity.class));
+                        break;
                     case 8:
                         startActivity(new Intent(HomeActivity.this, SettingActivity.class));
                         break;
@@ -110,9 +113,9 @@ public class HomeActivity extends Activity {
                         //直接登录,那么肯定已经设置过密码了,所以不进入引导页,而是直接进入页面
                         //上述逻辑错误,设置过密码还要看是否设置过向导,向导没有完成,还是要再次进入向导.
                         boolean configed = mPref.getBoolean("configed", false);
-                        if(configed){
+                        if (configed) {
                             startActivity(new Intent(HomeActivity.this, LostFindActivity.class));
-                        }else {
+                        } else {
                             startActivity(new Intent(HomeActivity.this, SafeGuideActivity.class));
                         }
                     } else {

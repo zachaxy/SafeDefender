@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!--<gradient-->
+    <!--android:startColor="#0f0"-->
+    <!--android:endColor="#00f"-->
+    <!--android:angle="45"/>-->
+    <solid
+        android:color="@color/green"/>
+    <padding android:left="7dp"
+        android:top="7dp"
+        android:right="7dp"
+        android:bottom="7dp" />
+    <corners android:radius="8dp" />
+    <stroke
+        android:color="@color/yellow"
+        android:width="3dp"
+        android:dashGap="20dp"
+        android:dashWidth="20dp"/>
+</shape>
+
+
+<!--
+整体是一个矩形
+solid:定义了背景颜色
+padding:定义内边距(文字与边框的)
+cotners:定义了圆角弧度
+stroke:定义了边缘虚线颜色,宽度,每个虚线长度,每个虚线间隔的长度
+-->
