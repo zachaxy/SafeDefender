@@ -362,7 +362,7 @@ public class SafeGuideActivity extends Activity {
             public void onClick(View v) {
                 startActivity(new Intent(SafeGuideActivity.this, LostFindActivity.class));
                 finish();
-                mPref.edit().putBoolean("configed",true).commit();
+                mPref.edit().putBoolean("configed", true).commit();
             }
         });
     }

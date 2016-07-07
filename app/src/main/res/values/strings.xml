@@ -22,6 +22,9 @@
     <string name="top_safe_guide3">3.手机防盗</string>
     <string name="top_safe_guide4">4.恭喜您设置完成</string>
     <string name="top_lost_find">手机防盗</string>
+    <string name="sample_device_admin_description">提供远程设备一键锁屏,清除数据功能</string>
+    <string name="sample_device_admin">SafeDefender超级设备管理器</string>
+    <string name="add_admin_extra_app_text">超级设别管理器设置向导</string>
 
 
 </resources>

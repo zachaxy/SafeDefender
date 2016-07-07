@@ -18,19 +18,19 @@ public class BootStartReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        mPref = context.getSharedPreferences("config",context.MODE_PRIVATE);
+        mPref = context.getSharedPreferences("config", context.MODE_PRIVATE);
         boolean isProtect = mPref.getBoolean("protect", false);
 
         //只有在防盗保护开启的情况下,才进行sim卡判断.
-        if (isProtect){
-            String sim = mPref.getString("SimSerial",null);
-            if (!TextUtils.isEmpty(sim)){
+        if (isProtect) {
+            String sim = mPref.getString("SimSerial", null);
+            if (!TextUtils.isEmpty(sim)) {
                 String currentSim = ((TelephonyManager) context.getSystemService(context.TELEPHONY_SERVICE)).getSimSerialNumber();
-                if (!sim.equals(currentSim)){
+                if (!sim.equals(currentSim)) {
                     //一旦发现手机的序列号改变,就向安全号码发送报警短信.
-                    String safeNumber = mPref.getString("safe_number","");
+                    String safeNumber = mPref.getString("safe_number", "");
                     SmsManager smsManager = SmsManager.getDefault();
-                    smsManager.sendTextMessage(safeNumber,null,"sim card changed",null,null);
+                    smsManager.sendTextMessage(safeNumber, null, "sim card changed", null, null);
                 }
             }
         }
