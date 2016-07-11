@@ -31,6 +31,9 @@
         <activity android:name=".ui.LostFindActivity" />
         <activity android:name=".ui.SafeGuideActivity" />
         <activity android:name=".ui.ContactActivity" />
+        <activity android:name=".ui.AdvanceToolActivity" />
+        <activity android:name=".ui.AddressActivity" />
+
 
         <receiver android:name=".receiver.BootStartReceiver">
             <intent-filter>
@@ -42,6 +45,8 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
+
+
         <receiver
             android:name=".receiver.AdminReceiver"
             android:description="@string/sample_device_admin_description"
@@ -57,9 +62,9 @@
         </receiver>
 
         <service android:name=".service.LocationService" />
+        <service android:name=".service.IncomingCallAddrService" />
 
-        <activity android:name=".ui.AdvanceToolActivity" />
-        <activity android:name=".ui.AddressActivity"></activity>
+
     </application>
 
 </manifest>
