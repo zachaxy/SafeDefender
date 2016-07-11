@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.zachaxy.safedefender.dao.AddressDao;
 import com.zachaxy.safedefender.receiver.OutCallReceiver;
+import com.zachaxy.safedefender.utils.AddrToastUtils;
 
 /**
  * Created by zhangxin on 2016/7/11.
@@ -59,7 +60,12 @@ public class IncomingCallAddrService extends Service {
                 case TelephonyManager.CALL_STATE_RINGING:
                     //电话铃响
                     String incomingAddress = AddressDao.getAddress(incomingNumber);
-                    Toast.makeText(IncomingCallAddrService.this,incomingAddress,Toast.LENGTH_LONG).show();
+                    //Toast.makeText(IncomingCallAddrService.this,incomingAddress,Toast.LENGTH_LONG).show();
+                    AddrToastUtils.show(IncomingCallAddrService.this,incomingAddress);
+                    break;
+                case TelephonyManager.CALL_STATE_IDLE:
+                    //TODO:取消归属地显示
+                    AddrToastUtils.hide();
                     break;
                 default:
                     break;

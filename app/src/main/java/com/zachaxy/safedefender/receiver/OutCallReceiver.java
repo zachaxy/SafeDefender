@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.zachaxy.safedefender.dao.AddressDao;
+import com.zachaxy.safedefender.utils.AddrToastUtils;
 
 /**
  * Created by zhangxin on 2016/7/11.
@@ -16,6 +17,7 @@ public class OutCallReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String number = getResultData();
         String address = AddressDao.getAddress(number);
-        Toast.makeText(context, address, Toast.LENGTH_LONG).show();
+        //Toast.makeText(context, address, Toast.LENGTH_LONG).show();
+        AddrToastUtils.show(context,address);
     }
 }
