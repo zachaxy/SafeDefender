@@ -18,7 +18,7 @@
         custom:set_item_title="@string/set_tv_dec_1" />
 
     <com.zachaxy.safedefender.widget.SettingItemView
-        android:id="@+id/set_show_coming_call_number"
+        android:id="@+id/set_show_phone_addr"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         custom:set_item_desc_on="来电归属地显示已开启"

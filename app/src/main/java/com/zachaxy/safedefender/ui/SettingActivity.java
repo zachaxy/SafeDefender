@@ -59,7 +59,7 @@ public class SettingActivity extends Activity {
      * 初始化归属地开关
      */
     private void initShowAddreItem() {
-        mSettingShowAddr = (SettingItemView) findViewById(R.id.set_show_coming_call_number);
+        mSettingShowAddr = (SettingItemView) findViewById(R.id.set_show_phone_addr);
 
         //这里根据当前服务是否运行来更新勾选框
         showAddr = ServiceStatusUtils.isServiceRunning(this, "com.zachaxy.safedefender.service.IncomingCallAddrService");
