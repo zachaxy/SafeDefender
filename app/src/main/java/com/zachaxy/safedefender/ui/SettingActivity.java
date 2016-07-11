@@ -1,6 +1,8 @@
 package com.zachaxy.safedefender.ui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import com.zachaxy.safedefender.R;
 import com.zachaxy.safedefender.service.IncomingCallAddrService;
 import com.zachaxy.safedefender.utils.ServiceStatusUtils;
 import com.zachaxy.safedefender.widget.SettingItemView;
+import com.zachaxy.safedefender.widget.SettingSelectItemView;
 
 
 /***
@@ -19,7 +22,12 @@ public class SettingActivity extends Activity {
 
     private SharedPreferences mPref;
     private SettingItemView mSettingAutoUpdate, mSettingShowAddr;
+    private SettingSelectItemView mSettingAddrStyle;
     private boolean autoUpdate, showAddr;
+    private int styleIndex;
+
+    private String[] addrStyles = {"半透明", "活力橙", "卫士蓝", "金属灰", "苹果绿"};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +39,7 @@ public class SettingActivity extends Activity {
 
         initAutoUpdateItem();
         initShowAddreItem();
+        initAddrStyle();
 
     }
 
@@ -77,5 +86,35 @@ public class SettingActivity extends Activity {
                 }
             }
         });
+    }
+
+    private void initAddrStyle() {
+        mSettingAddrStyle = (SettingSelectItemView) findViewById(R.id.set_show_phone_addr_style);
+        styleIndex = mPref.getInt("addr_style", 0);
+        mSettingAddrStyle.setDesc(addrStyles[styleIndex]);
+        mSettingAddrStyle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectAddrStyleDialog();
+            }
+        });
+    }
+
+    private void selectAddrStyleDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("归属地提示框风格");
+        builder.setIcon(R.drawable.jinshan_icon);
+        builder.setSingleChoiceItems(addrStyles, styleIndex, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mSettingAddrStyle.setDesc(addrStyles[which]);
+                mPref.edit().putInt("addr_style", which).commit();
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton("取消", null);
+        builder.setCancelable(false);
+        builder.show();
     }
 }

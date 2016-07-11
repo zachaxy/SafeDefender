@@ -5,4 +5,9 @@
         <attr name="set_item_desc_on" format="string" />
         <attr name="set_item_desc_off" format="string" />
     </declare-styleable>
+
+    <declare-styleable name="SettingSelectItemView">
+        <attr name="set_item_select_title" format="string" />
+        <attr name="set_item_select_desc" format="string" />
+    </declare-styleable>
 </resources>

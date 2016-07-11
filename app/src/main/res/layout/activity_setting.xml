@@ -13,15 +13,21 @@
         android:id="@+id/set_autoupdate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        custom:set_item_desc_on="自动更新已开启"
         custom:set_item_desc_off="自动更新已关闭"
+        custom:set_item_desc_on="自动更新已开启"
         custom:set_item_title="@string/set_tv_dec_1" />
 
     <com.zachaxy.safedefender.widget.SettingItemView
         android:id="@+id/set_show_phone_addr"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        custom:set_item_desc_on="来电归属地显示已开启"
         custom:set_item_desc_off="来电归属地显示已关闭"
+        custom:set_item_desc_on="来电归属地显示已开启"
         custom:set_item_title="来电归属地显示设置" />
+
+    <com.zachaxy.safedefender.widget.SettingSelectItemView
+        android:id="@+id/set_show_phone_addr_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        custom:set_item_select_title="来电归属地风格设置" />
 </LinearLayout>
