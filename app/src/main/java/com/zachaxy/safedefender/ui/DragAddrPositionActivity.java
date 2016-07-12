@@ -16,10 +16,12 @@ import com.zachaxy.safedefender.R;
 
 public class DragAddrPositionActivity extends Activity {
 
+    private RelativeLayout mLayout;
     private TextView mTop, mBottom;
     private ImageView mDrag;
     private int startX, startY;
     private SharedPreferences mPref;
+    private int windowWidth, windowHeight;
 
     private int centerX, centerY;
 
@@ -29,11 +31,16 @@ public class DragAddrPositionActivity extends Activity {
         setContentView(R.layout.activity_drag_addr_position);
 
 
+        mLayout = (RelativeLayout) findViewById(R.id.rl_at_drag);
         mTop = (TextView) findViewById(R.id.tv_position_top);
         mBottom = (TextView) findViewById(R.id.tv_position_bottom);
         mDrag = (ImageView) findViewById(R.id.iv_drag);
         mPref = getSharedPreferences("config", MODE_PRIVATE);
 
+        windowWidth = getWindowManager().getDefaultDisplay().getWidth();
+        windowHeight = getWindowManager().getDefaultDisplay().getHeight();
+
+        System.out.println(windowHeight + "  " + windowWidth);
         if (!mPref.contains("center_x")) {
             centerX = (((RelativeLayout) mDrag.getParent()).getWidth() - mDrag.getWidth()) / 2;
             mPref.edit().putInt("center_x", centerX).commit();
@@ -48,6 +55,14 @@ public class DragAddrPositionActivity extends Activity {
 
         int last_x = mPref.getInt("last_x", centerX);
         int last_y = mPref.getInt("last_y", centerY);
+
+        if (last_y > windowHeight / 2) {
+            mTop.setVisibility(View.VISIBLE);
+            mBottom.setVisibility(View.INVISIBLE);
+        } else {
+            mTop.setVisibility(View.INVISIBLE);
+            mBottom.setVisibility(View.VISIBLE);
+        }
 
         //注意布局绘制的步骤:onMeasure(测量)->onLayout(安放位置)->onDraw(绘制)
         //因为还没有测量完毕,所以就不能安放位置
@@ -78,6 +93,21 @@ public class DragAddrPositionActivity extends Activity {
                         int right = mDrag.getRight() + dx;
                         int top = mDrag.getTop() + dy;
                         int bottom = mDrag.getBottom() + dy;
+
+                        if (left < 0 | right > windowWidth) {
+                            break;
+                        }
+                        if (top < 0 | bottom > windowHeight - 30) {
+                            break;
+                        }
+
+                        if (top > windowHeight / 2) {
+                            mTop.setVisibility(View.VISIBLE);
+                            mBottom.setVisibility(View.INVISIBLE);
+                        } else {
+                            mTop.setVisibility(View.INVISIBLE);
+                            mBottom.setVisibility(View.VISIBLE);
+                        }
                         //注:是手势先移动到所需的位置,然后图片才跟着移动过去,在还为移动前,mDrag.getLeft()获得的是手势移动前的位置.
                         mDrag.layout(left, top, right, bottom);
 
