@@ -3,6 +3,7 @@ package com.zachaxy.safedefender.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -45,7 +46,9 @@ public class AddrToastUtils {
         if (mPref.contains("last_x") && mPref.contains("last_y")) {
             int last_x = mPref.getInt("last_x", 0);
             int last_y = mPref.getInt("last_y", 0);
-            view.layout(last_x, last_y, last_x + view.getWidth(), last_y + view.getHeight());
+            params.gravity = Gravity.LEFT + Gravity.TOP; //默认是居中的,现将其设置为左上角.
+            params.x = last_x;
+            params.y = last_y;
         }
 
         TextView address = (TextView) view.findViewById(R.id.tv_addr_view);
