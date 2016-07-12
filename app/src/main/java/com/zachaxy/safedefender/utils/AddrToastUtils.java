@@ -1,9 +1,11 @@
 package com.zachaxy.safedefender.utils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.zachaxy.safedefender.R;
@@ -35,16 +37,23 @@ public class AddrToastUtils {
         params.type = WindowManager.LayoutParams.TYPE_TOAST;
         params.setTitle("Toast");
 
-        /*view = new TextView(context);
-        view.setText(text);*/
+        SharedPreferences mPref = context.getSharedPreferences("config", context.MODE_PRIVATE);
         view = View.inflate(context, R.layout.toast_address, null);
-        int styleIndex = context.getSharedPreferences("config", context.MODE_PRIVATE).getInt("addr_style", 0);
+        int styleIndex = mPref.getInt("addr_style", 0);
         view.setBackgroundResource(styles[styleIndex]);
+
+        if (mPref.contains("last_x") && mPref.contains("last_y")) {
+            int last_x = mPref.getInt("last_x", 0);
+            int last_y = mPref.getInt("last_y", 0);
+            view.layout(last_x, last_y, last_x + view.getWidth(), last_y + view.getHeight());
+        }
+
         TextView address = (TextView) view.findViewById(R.id.tv_addr_view);
         address.setText(text);
         manager.addView(view, params);
     }
 
+    //电话活动结束后删除view布局
     public static void hide() {
         if (manager != null && view != null) {
             manager.removeView(view);

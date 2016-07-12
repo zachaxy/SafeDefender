@@ -22,7 +22,7 @@ public class SettingActivity extends Activity {
 
     private SharedPreferences mPref;
     private SettingItemView mSettingAutoUpdate, mSettingShowAddr;
-    private SettingSelectItemView mSettingAddrStyle;
+    private SettingSelectItemView mSettingAddrStyle,mSettingAddrPosition;
     private boolean autoUpdate, showAddr;
     private int styleIndex;
 
@@ -40,6 +40,7 @@ public class SettingActivity extends Activity {
         initAutoUpdateItem();
         initShowAddreItem();
         initAddrStyle();
+        initAddrPosition();
 
     }
 
@@ -116,5 +117,16 @@ public class SettingActivity extends Activity {
         builder.setNegativeButton("取消", null);
         builder.setCancelable(false);
         builder.show();
+    }
+
+    private void initAddrPosition(){
+        mSettingAddrPosition = (SettingSelectItemView) findViewById(R.id.set_show_phone_addr_position);
+        mSettingAddrPosition.setDesc("设置归属地提示框的显示位置");
+        mSettingAddrPosition.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SettingActivity.this,DragAddrPositionActivity.class));
+            }
+        });
     }
 }

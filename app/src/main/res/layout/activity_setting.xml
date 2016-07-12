@@ -30,4 +30,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         custom:set_item_select_title="来电归属地风格设置" />
+
+    <com.zachaxy.safedefender.widget.SettingSelectItemView
+        android:id="@+id/set_show_phone_addr_position"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        custom:set_item_select_title="来电归属地位置设置" />
 </LinearLayout>
