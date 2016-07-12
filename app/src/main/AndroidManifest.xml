@@ -34,6 +34,10 @@
         <activity android:name=".ui.ContactActivity" />
         <activity android:name=".ui.AdvanceToolActivity" />
         <activity android:name=".ui.AddressActivity" />
+        <!--设置该Activity的半透明的浮层效果-->
+        <activity
+            android:name=".ui.DragAddrPositionActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <receiver android:name=".receiver.BootStartReceiver">
             <intent-filter>
@@ -70,7 +74,7 @@
         <service android:name=".service.LocationService" />
         <service android:name=".service.IncomingCallAddrService" />
 
-        <activity android:name=".ui.DragAddrPositionActivity"></activity>
+
     </application>
 
 </manifest>

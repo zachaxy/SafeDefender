@@ -4,6 +4,7 @@
     android:id="@+id/rl_at_drag"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#5000"
     tools:context="com.zachaxy.safedefender.ui.DragAddrPositionActivity">
 
     <TextView
