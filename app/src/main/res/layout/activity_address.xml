@@ -16,16 +16,17 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_addr_top"
         android:digits="1234567890"
+        android:drawableRight="@drawable/delete"
         android:hint="请输入要查询的号码"
         android:inputType="number"
         android:singleLine="true" />
 
     <Button
         android:id="@+id/btn_addr_query"
-        android:background="@drawable/button_selector"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/et_addr_number"
+        android:background="@drawable/button_selector"
         android:onClick="query"
         android:text="查询" />
 

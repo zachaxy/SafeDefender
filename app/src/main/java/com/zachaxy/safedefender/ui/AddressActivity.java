@@ -1,11 +1,13 @@
 package com.zachaxy.safedefender.ui;
 
+import android.graphics.drawable.Drawable;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
@@ -26,7 +28,23 @@ public class AddressActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address);
         etPhoneNumber = (EditText) findViewById(R.id.et_addr_number);
+        etPhoneNumber.getCompoundDrawables();
 
+        etPhoneNumber.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_UP:
+                        Drawable drawableRight = etPhoneNumber.getCompoundDrawables()[2];
+                        if (drawableRight != null && event.getX() > (etPhoneNumber.getRight() - drawableRight.getBounds().width())) {
+                            etPhoneNumber.setText("");
+                        }
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
         //设置动态改变自动查询
         etPhoneNumber.addTextChangedListener(new TextWatcher() {
             @Override
@@ -54,22 +72,22 @@ public class AddressActivity extends AppCompatActivity {
             String address = AddressDao.getAddress(number);
             tvResult.setText(address);
         } else {
-            Animation shake = new ScaleAnimation(0.95f,1f,0.95f,1f,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
+            Animation shake = new ScaleAnimation(0.95f, 1f, 0.95f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
             shake.setDuration(80);
             shake.setRepeatCount(3);
             etPhoneNumber.startAnimation(shake);
-            Toast.makeText(this,"查询号码不能为空",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "查询号码不能为空", Toast.LENGTH_SHORT).show();
             viberate();
         }
     }
 
-    private void viberate(){
+    private void viberate() {
         Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         //直接震动两秒
         //vibrator.vibrate(2000);
 
         //周期性的震动:现等待1s,在震动2s,在等待1s,在震动2s, -1表示不循环,只执行一次,0表示从头开始循环,>0表示从第i个位置开始循环
-        vibrator.vibrate(new long[]{1000,2000,1000,2000},-1);
+        vibrator.vibrate(new long[]{1000, 2000, 1000, 2000}, -1);
 
         //取消震动
         //vibrator.cancel();

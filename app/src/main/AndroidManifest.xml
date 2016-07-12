@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.zachaxy.safedefender">
 
-    <!-- 一下分别添加了访问网络,读取SIM卡信息,开机广播,读取联系人信息,发送短信,接收短信,手机定位,手机震动,拨打电话 -->
+    <!-- 一下分别添加了访问网络,读取SIM卡信息,开机广播,读取联系人信息,发送短信,接收短信,手机定位,手机震动,拨打电话,在window层显示view -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -13,6 +13,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
 
     <application
         android:allowBackup="true"

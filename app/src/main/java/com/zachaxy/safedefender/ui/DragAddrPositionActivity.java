@@ -2,6 +2,7 @@ package com.zachaxy.safedefender.ui;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -22,8 +23,8 @@ public class DragAddrPositionActivity extends Activity {
     private int startX, startY;
     private SharedPreferences mPref;
     private int windowWidth, windowHeight;
-
     private int centerX, centerY;
+    private long[] mHint = new long[2];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,15 +127,22 @@ public class DragAddrPositionActivity extends Activity {
                     default:
                         break;
                 }
-                //表示消费了该触摸事件
-                return true;
+                //要返回false,以便让其响应点击事件
+                return false;
+            }
+        });
+
+        //双击将图片居中
+        mDrag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.arraycopy(mHint, 1, mHint, 0, mHint.length - 1);
+                mHint[mHint.length - 1] = SystemClock.uptimeMillis();
+                if (mHint[0] >= (SystemClock.uptimeMillis() - 500)) {
+                    mDrag.layout(windowWidth / 2 - mDrag.getWidth() / 2, mDrag.getTop(), windowWidth / 2 + mDrag.getWidth() / 2, mDrag.getBottom());
+                    mPref.edit().putInt("last_x", windowWidth / 2 - mDrag.getWidth() / 2).commit();
+                }
             }
         });
     }
-
-  /*  @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        //finish();
-    }*/
 }

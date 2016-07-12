@@ -3,72 +3,77 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <TextView
         style="@style/top_title"
-        android:text="@string/top_safe_guide1"/>
+        android:text="@string/top_safe_guide1" />
 
     <TextView
         style="@style/content_style"
-        android:text="您的手机防盗卫士:"/>
+        android:text="您的手机防盗卫士:" />
+
     <TextView
-        android:drawableLeft="@android:drawable/star_big_on"
         style="@style/content_style"
+        android:drawableLeft="@android:drawable/star_big_on"
         android:gravity="center"
-        android:text="SIM卡变更报警"/>
+        android:text="SIM卡变更报警" />
+
     <TextView
-        android:drawableLeft="@android:drawable/star_big_on"
         style="@style/content_style"
+        android:drawableLeft="@android:drawable/star_big_on"
         android:gravity="center"
-        android:text="GPS追踪"/>
+        android:text="GPS追踪" />
+
     <TextView
-        android:drawableLeft="@android:drawable/star_big_on"
         style="@style/content_style"
+        android:drawableLeft="@android:drawable/star_big_on"
         android:gravity="center"
-        android:text="远程锁屏"/>
+        android:text="远程锁屏" />
+
     <TextView
-        android:drawableLeft="@android:drawable/star_big_on"
         style="@style/content_style"
+        android:drawableLeft="@android:drawable/star_big_on"
         android:gravity="center"
-        android:text="远程数据销毁"/>
+        android:text="远程数据销毁" />
 
     <LinearLayout
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:gravity="center"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/presence_online"/>
+            android:src="@android:drawable/presence_online" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/presence_invisible"/>
+            android:src="@android:drawable/presence_invisible" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/presence_invisible"/>
+            android:src="@android:drawable/presence_invisible" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/presence_invisible"/>
+            android:src="@android:drawable/presence_invisible" />
 
     </LinearLayout>
 
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="1">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/safe_set_guide1"
-        android:layout_centerInParent="true"/>
-</RelativeLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/safe_set_guide1" />
+    </RelativeLayout>
 
 </LinearLayout>
