@@ -5,3 +5,5 @@
     <item android:drawable="@drawable/click_text" android:state_hovered="true" /> <!-- hovered -->
     <item android:drawable="@android:drawable/screen_background_light_transparent" /> <!-- default -->
 </selector>
+
+    <!--点击按钮后按钮旁边附加一圈虚线-->

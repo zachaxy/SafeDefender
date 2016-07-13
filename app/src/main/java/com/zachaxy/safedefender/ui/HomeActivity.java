@@ -71,6 +71,8 @@ public class HomeActivity extends Activity {
                     case 0:
                         showSafePasswordDialog();
                         break;
+                    case 1:
+                        startActivity(new Intent(HomeActivity.this,CallMsgSafeActivity.class));
                     case 7:
                         startActivity(new Intent(HomeActivity.this, AdvanceToolActivity.class));
                         break;

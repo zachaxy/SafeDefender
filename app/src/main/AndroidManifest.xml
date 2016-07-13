@@ -21,7 +21,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".ui.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,7 +39,6 @@
         <activity
             android:name=".ui.DragAddrPositionActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
         <activity
             android:name=".ui.RocketBackgroundActivity"
             android:launchMode="singleInstance"
@@ -82,7 +80,7 @@
         <service android:name=".service.IncomingCallAddrService" />
         <service android:name=".service.RocketService" />
 
-
+        <activity android:name=".ui.CallMsgSafeActivity"></activity>
     </application>
 
 </manifest>

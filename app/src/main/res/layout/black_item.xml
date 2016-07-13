@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_black_number"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:text="18220197838"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/tv_black_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_below="@id/tv_black_number"
+        android:text="陕西西安移动"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/img_delete_black"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/delete_selector" />
+
+</RelativeLayout>

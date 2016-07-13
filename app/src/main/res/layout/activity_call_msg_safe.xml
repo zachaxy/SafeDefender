@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.zachaxy.safedefender.ui.CallMsgSafeActivity">
+
+    <TextView
+        android:id="@+id/tv_cm_top"
+        style="@style/top_title"
+        android:text="黑名单管理" />
+
+    <ListView
+        android:id="@+id/lv_cm_backlist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/btn_black_pre"
+        android:layout_below="@id/tv_cm_top" />
+
+    <LinearLayout
+        android:id="@+id/ll_wait_balcklist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="玩命加载中..."
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_black_pre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/button_selector"
+        android:onClick="prePage"
+        android:text="上一页" />
+
+    <Button
+        android:id="@+id/btn_black_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/btn_black_pre"
+        android:background="@drawable/button_selector"
+        android:onClick="nextPage"
+        android:text="下一页" />
+
+    <Button
+        android:id="@+id/btn_black_jump"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/btn_black_next"
+        android:background="@drawable/click_selector"
+        android:onClick="jumpPage"
+        android:text="跳转至:" />
+
+    <EditText
+        android:id="@+id/et_black_page"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/btn_black_jump" />
+
+    <TextView
+        android:id="@+id/tv_black_pages"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/et_black_page"
+        android:layout_alignBottom="@id/btn_black_jump"
+        android:textSize="20sp"
+        android:text="1/10" />
+</RelativeLayout>
