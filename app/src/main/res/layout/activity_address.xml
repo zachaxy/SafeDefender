@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_addr_top"
         android:digits="1234567890"
-        android:drawableRight="@drawable/delete"
+        android:drawableRight="@drawable/keyboard_delete_selector"
         android:hint="请输入要查询的号码"
         android:inputType="number"
         android:singleLine="true" />

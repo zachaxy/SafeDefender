@@ -18,6 +18,14 @@
         custom:set_item_title="@string/set_tv_dec_1" />
 
     <com.zachaxy.safedefender.widget.SettingItemView
+        android:id="@+id/set_show_rocket"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        custom:set_item_desc_off="桌面小火箭已关闭"
+        custom:set_item_desc_on="桌面小火箭已开启"
+        custom:set_item_title="桌面小火箭" />
+
+    <com.zachaxy.safedefender.widget.SettingItemView
         android:id="@+id/set_show_phone_addr"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

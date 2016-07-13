@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.zachaxy.safedefender.R;
 import com.zachaxy.safedefender.service.IncomingCallAddrService;
+import com.zachaxy.safedefender.service.RocketService;
 import com.zachaxy.safedefender.utils.ServiceStatusUtils;
 import com.zachaxy.safedefender.widget.SettingItemView;
 import com.zachaxy.safedefender.widget.SettingSelectItemView;
@@ -21,9 +22,9 @@ import com.zachaxy.safedefender.widget.SettingSelectItemView;
 public class SettingActivity extends Activity {
 
     private SharedPreferences mPref;
-    private SettingItemView mSettingAutoUpdate, mSettingShowAddr;
-    private SettingSelectItemView mSettingAddrStyle,mSettingAddrPosition;
-    private boolean autoUpdate, showAddr;
+    private SettingItemView mSettingAutoUpdate, mSettingRocket, mSettingShowAddr;
+    private SettingSelectItemView mSettingAddrStyle, mSettingAddrPosition;
+    private boolean autoUpdate, showRocket, showAddr;
     private int styleIndex;
 
     private String[] addrStyles = {"半透明", "活力橙", "卫士蓝", "金属灰", "苹果绿"};
@@ -38,6 +39,7 @@ public class SettingActivity extends Activity {
 
 
         initAutoUpdateItem();
+        initRocketItem();
         initShowAddreItem();
         initAddrStyle();
         initAddrPosition();
@@ -119,13 +121,32 @@ public class SettingActivity extends Activity {
         builder.show();
     }
 
-    private void initAddrPosition(){
+    private void initAddrPosition() {
         mSettingAddrPosition = (SettingSelectItemView) findViewById(R.id.set_show_phone_addr_position);
         mSettingAddrPosition.setDesc("设置归属地提示框的显示位置");
         mSettingAddrPosition.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(SettingActivity.this,DragAddrPositionActivity.class));
+                startActivity(new Intent(SettingActivity.this, DragAddrPositionActivity.class));
+            }
+        });
+    }
+
+    private void initRocketItem() {
+        mSettingRocket = (SettingItemView) findViewById(R.id.set_show_rocket);
+        showRocket = ServiceStatusUtils.isServiceRunning(this, "com.zachaxy.safedefender.service.RocketService");
+        mSettingRocket.setCheck(showRocket);
+
+        mSettingRocket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mSettingRocket.isCheck()){
+                    mSettingRocket.setCheck(false);
+                    stopService(new Intent(SettingActivity.this, RocketService.class));
+                }else {
+                    mSettingRocket.setCheck(true);
+                    startService(new Intent(SettingActivity.this, RocketService.class));
+                }
             }
         });
     }
