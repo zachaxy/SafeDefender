@@ -14,7 +14,7 @@
         android:id="@+id/lv_cm_backlist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_black_pre"
+        android:layout_above="@+id/ll_black_bottom"
         android:layout_below="@id/tv_cm_top" />
 
     <LinearLayout
@@ -38,56 +38,68 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_black_pre"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/ll_black_bottom"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="10dp"
-        android:background="@drawable/button_selector"
-        android:onClick="prePage"
-        android:text="上一页" />
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/btn_black_next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@id/btn_black_pre"
-        android:background="@drawable/button_selector"
-        android:onClick="nextPage"
-        android:text="下一页" />
+        <Button
+            android:id="@+id/btn_black_pre"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_selector"
+            android:onClick="prePage"
+            android:text="上一页" />
 
-    <Button
-        android:id="@+id/btn_black_jump"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@id/btn_black_next"
-        android:background="@drawable/click_selector"
-        android:onClick="jumpPage"
-        android:text="跳转至:" />
+        <Button
+            android:id="@+id/btn_black_next"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/btn_black_pre"
+            android:layout_weight="1"
+            android:background="@drawable/button_selector"
+            android:onClick="nextPage"
+            android:text="下一页" />
 
-    <EditText
-        android:id="@+id/et_black_page"
-        android:layout_width="30dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="5dp"
-        android:layout_toRightOf="@id/btn_black_jump"
-        android:digits="1234567890"
-        android:inputType="number"
-        android:maxLength="2" />
+        <Button
+            android:id="@+id/btn_black_jump"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/btn_black_next"
+            android:layout_weight="1"
+            android:background="@drawable/click_selector"
+            android:onClick="jumpPage"
+            android:text="跳转至:" />
 
-    <TextView
-        android:id="@+id/tv_black_pages"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/btn_black_jump"
-        android:layout_alignBottom="@id/btn_black_jump"
-        android:layout_toRightOf="@id/et_black_page"
-        android:text="1/10"
-        android:textSize="20sp" />
+        <EditText
+            android:id="@+id/et_black_page"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:layout_toRightOf="@id/btn_black_jump"
+            android:layout_weight="0.4"
+            android:digits="1234567890"
+            android:gravity="right"
+            android:inputType="number"
+            android:maxLength="2"
+            android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/tv_black_pages"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/btn_black_jump"
+            android:layout_alignBottom="@id/btn_black_jump"
+            android:layout_toRightOf="@id/et_black_page"
+            android:layout_weight="0.6"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+
 </RelativeLayout>

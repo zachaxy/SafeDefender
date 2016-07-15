@@ -4,12 +4,15 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -45,10 +48,23 @@ public class CallMsgSafeActivity extends AppCompatActivity {
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            adapter = new BlackListAdapter();
-            mBlackListView.setAdapter(adapter);
-            mWaitBlackProgress.setVisibility(View.INVISIBLE);
-            mPageNumbers.setText(currentPage + 1 + "/" + getTotalPage());
+            switch (msg.what) {
+                case 0:
+                    adapter = new BlackListAdapter();
+                    mBlackListView.setAdapter(adapter);
+                    mWaitBlackProgress.setVisibility(View.INVISIBLE);
+                    mJumpPage.setText(currentPage + 1 + "");
+                    mPageNumbers.setText("/" + getTotalPage());
+                    break;
+                case 1:
+                    adapter.notifyDataSetChanged();
+                    mJumpPage.setText(currentPage + 1 + "");
+                    mPageNumbers.setText("/" + getTotalPage());
+                    break;
+                default:
+                    break;
+            }
+
         }
     };
 
@@ -69,6 +85,7 @@ public class CallMsgSafeActivity extends AppCompatActivity {
         mPageNumbers = (TextView) findViewById(R.id.tv_black_pages);
         mJumpPage = (EditText) findViewById(R.id.et_black_page);
 
+        //设置键盘按下回车键后的响应动作
         mJumpPage.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -80,6 +97,9 @@ public class CallMsgSafeActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        //设置键盘确认键的上文字
+        mJumpPage.setImeOptions(EditorInfo.IME_ACTION_GO);
     }
 
 
@@ -116,8 +136,11 @@ public class CallMsgSafeActivity extends AppCompatActivity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             BlackItemInfo blackItemInfo = mBlackList.get(position);
+
+            final String number = blackItemInfo.getNumber();
+
             View view;
             BlackItemViewHolder viewHolder;
             if (convertView == null) {
@@ -125,13 +148,37 @@ public class CallMsgSafeActivity extends AppCompatActivity {
                 viewHolder = new BlackItemViewHolder();
                 viewHolder.number = (TextView) view.findViewById(R.id.tv_black_number);
                 viewHolder.mode = (TextView) view.findViewById(R.id.tv_black_mode);
+                viewHolder.delete = (ImageView) view.findViewById(R.id.img_delete_black);
                 view.setTag(viewHolder);
             } else {
                 view = convertView;
                 viewHolder = (BlackItemViewHolder) view.getTag();
             }
-            viewHolder.number.setText(blackItemInfo.getNumber());
+            viewHolder.number.setText(number);
             viewHolder.mode.setText(mBlackModes[Integer.valueOf(blackItemInfo.getMode())]);
+
+            viewHolder.delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean result = dao.delete(number);
+                    if (result) {
+                        Toast.makeText(CallMsgSafeActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                        itemCount--;
+                        mBlackList.remove(position);
+                        //TODO:验证这里是否可以通过handler来设置...handelr可以设置/直接在这里执行相应逻辑也可以.
+                        //handler.sendEmptyMessage(1);
+                        adapter.notifyDataSetChanged();
+                        mJumpPage.setText(currentPage + 1 + "");
+                        mPageNumbers.setText("/" + getTotalPage());
+                        if (currentPage == getTotalPage()) {
+                            currentPage--;
+                            initData();
+                        }
+                    } else {
+                        Toast.makeText(CallMsgSafeActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
             return view;
         }
     }
@@ -139,6 +186,7 @@ public class CallMsgSafeActivity extends AppCompatActivity {
     class BlackItemViewHolder {
         TextView number;
         TextView mode;
+        ImageView delete;
     }
 
     public void prePage(View v) {
@@ -162,12 +210,20 @@ public class CallMsgSafeActivity extends AppCompatActivity {
     }
 
     public void jumpPage(View v) {
-        if (currentPage == 0) {
-            Toast.makeText(this, "已经是第一页了", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(mJumpPage.getText())) {
+            Toast.makeText(this, "请输入您要跳转的页面号", Toast.LENGTH_SHORT).show();
+            mJumpPage.setText(currentPage + 1 + "");
+            return;
+        }
+
+        int pageIndex = Integer.valueOf(mJumpPage.getText().toString());
+        if (pageIndex < 1 || pageIndex > getTotalPage()) {
+            Toast.makeText(this, "您要跳转的页面号不在范围内", Toast.LENGTH_SHORT).show();
+            mJumpPage.setText(currentPage + 1 + "");
             return;
         }
         mWaitBlackProgress.setVisibility(View.VISIBLE);
-        currentPage--;
+        currentPage = pageIndex - 1;
         initData();
     }
 
