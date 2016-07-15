@@ -14,7 +14,7 @@
         android:id="@+id/lv_cm_backlist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/btn_black_pre"
+        android:layout_above="@+id/btn_black_pre"
         android:layout_below="@id/tv_cm_top" />
 
     <LinearLayout
@@ -76,15 +76,18 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="5dp"
-        android:layout_toRightOf="@id/btn_black_jump" />
+        android:layout_toRightOf="@id/btn_black_jump"
+        android:digits="1234567890"
+        android:inputType="number"
+        android:maxLength="2" />
 
     <TextView
         android:id="@+id/tv_black_pages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@id/et_black_page"
+        android:layout_alignBaseline="@id/btn_black_jump"
         android:layout_alignBottom="@id/btn_black_jump"
-        android:textSize="20sp"
-        android:text="1/10" />
+        android:layout_toRightOf="@id/et_black_page"
+        android:text="1/10"
+        android:textSize="20sp" />
 </RelativeLayout>
