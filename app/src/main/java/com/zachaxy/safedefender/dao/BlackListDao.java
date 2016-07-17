@@ -111,6 +111,30 @@ public class BlackListDao {
     }
 
 
+    /**
+     * 分批查询黑名单,减轻服务器压力.
+     *
+     * @param startIndex 表示接下来要查询的开始的位置
+     * @param maxCount    表示每一批量最多要查询的条目
+     * @return 返回一个page
+     */
+    public List<BlackItemInfo> findBatch(int startIndex, int maxCount) {
+        ArrayList<BlackItemInfo> list = new ArrayList<>();
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        //limit表示查询多少条数据;offset表示从多少条后开始查询
+        Cursor cursor = db.rawQuery("select number,mode from balckList limit ? offset ?",
+                new String[]{String.valueOf(maxCount), String.valueOf(startIndex)});
+        while (cursor.moveToNext()) {
+            BlackItemInfo blackItemInfo = new BlackItemInfo(cursor.getString(0), cursor.getString(1));
+            list.add(blackItemInfo);
+        }
+        cursor.close();
+        db.close();
+        return list;
+    }
+
+
     public int getTotalItem() {
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor cursor = db.rawQuery("select count(*) from balckList", null);

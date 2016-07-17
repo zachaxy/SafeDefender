@@ -1,5 +1,8 @@
 package com.zachaxy.safedefender.ui;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -9,13 +12,19 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +54,9 @@ public class CallMsgSafeActivity extends AppCompatActivity {
     private boolean firstLoad = true;
 
 
+    //用于在添加黑名单时,选择拦截模式的索引,这里设置为全局变量.
+    private int modeIndex;
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -64,7 +76,6 @@ public class CallMsgSafeActivity extends AppCompatActivity {
                 default:
                     break;
             }
-
         }
     };
 
@@ -90,7 +101,6 @@ public class CallMsgSafeActivity extends AppCompatActivity {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
-                    Log.d("###", "onKey: 按下确认键");
                     jumpPage(v);
                     return true;
                 }
@@ -100,6 +110,27 @@ public class CallMsgSafeActivity extends AppCompatActivity {
 
         //设置键盘确认键的上文字
         mJumpPage.setImeOptions(EditorInfo.IME_ACTION_GO);
+
+        //界面初始化时,不展示键盘
+        //closeInputWindown();
+        //TODO:为listview添加分批处理逻辑,当下滑到没有数据后,继续从数据库添加数据库
+        /*mBlackListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                switch (scrollState) {
+                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+                        break;
+                }
+            }
+
+            //只要listview滑动,就会调用该方法.
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });*/
     }
 
 
@@ -210,6 +241,7 @@ public class CallMsgSafeActivity extends AppCompatActivity {
     }
 
     public void jumpPage(View v) {
+
         if (TextUtils.isEmpty(mJumpPage.getText())) {
             Toast.makeText(this, "请输入您要跳转的页面号", Toast.LENGTH_SHORT).show();
             mJumpPage.setText(currentPage + 1 + "");
@@ -217,14 +249,105 @@ public class CallMsgSafeActivity extends AppCompatActivity {
         }
 
         int pageIndex = Integer.valueOf(mJumpPage.getText().toString());
+        if (pageIndex == currentPage + 1) {
+            return;
+        }
+
         if (pageIndex < 1 || pageIndex > getTotalPage()) {
             Toast.makeText(this, "您要跳转的页面号不在范围内", Toast.LENGTH_SHORT).show();
             mJumpPage.setText(currentPage + 1 + "");
             return;
         }
+
+
         mWaitBlackProgress.setVisibility(View.VISIBLE);
         currentPage = pageIndex - 1;
         initData();
+    }
+
+
+    public void addBlack(View v) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View view = View.inflate(this, R.layout.dialog_add_black, null);
+        mJumpPage.clearFocus();
+
+
+        final EditText addBlackNumber = (EditText) view.findViewById(R.id.et_add_black_number);
+
+
+        Spinner checkBlackMode = (Spinner) view.findViewById(R.id.sp_black_mode);
+
+        final ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(CallMsgSafeActivity.this, android.R.layout.simple_spinner_item, mBlackModes);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        checkBlackMode.setAdapter(spinnerAdapter);
+
+
+        //checkBlackMode.setSelection(2, true);
+        checkBlackMode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                modeIndex = position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+        builder.setView(view);
+
+        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (TextUtils.isEmpty(addBlackNumber.getText().toString())) {
+                    Toast.makeText(CallMsgSafeActivity.this, "黑名单号码不能为空", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                    return;
+                }
+
+                //TODO:改变逻辑,新添加的黑名单显示在第一个条目.
+                boolean addFlag = dao.add(addBlackNumber.getText().toString(), String.valueOf(modeIndex));
+                if (!addFlag) {
+                    Toast.makeText(CallMsgSafeActivity.this, "黑名单号码添加失败", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                    return;
+                }
+
+                itemCount++;
+                //当前页不是最后一页,直接跳转到最后一页
+                if (currentPage != lastPage()) {
+                    currentPage = lastPage();
+                    initData();
+                    mBlackListView.setSelection(mBlackList.size() - 1);
+                } else {
+                    //正好在当前页,并且当前页不满20个,直接在view中显示即可.
+                    mBlackList.add(new BlackItemInfo(addBlackNumber.getText().toString(), String.valueOf(modeIndex)));
+                    adapter.notifyDataSetChanged();
+                    mBlackListView.setSelection(mBlackListView.getLastVisiblePosition());
+                }
+
+
+                Toast.makeText(CallMsgSafeActivity.this, "黑名单添加成功", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        builder.setCancelable(false);
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        dialog.show();
+
+
+        //-------------
+       /* addBlackNumber.requestFocus();
+        ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).showSoftInput(addBlackNumber, InputMethodManager.SHOW_FORCED);*/
     }
 
     /***
@@ -240,5 +363,37 @@ public class CallMsgSafeActivity extends AppCompatActivity {
             return totalPage + 1;
         }
     }
+
+    private int lastPage() {
+        return getTotalPage() - 1;
+    }
+
+
+    /*private void closeInputWindown() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+
+    private void openInputWindown() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.showSoftInput(mJumpPage, InputMethodManager.SHOW_FORCED);
+    }*/
+   /* public void lostFocus(View v) {
+        switch (v.getId()) {
+            case R.id.et_black_page:
+                break;
+            *//*case R.id.rl_cm_losefocus:
+                System.out.println("down");
+                InputMethodManager imm = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                break;*//*
+            default:
+                mJumpPage.clearFocus();
+                mWaitBlackProgress.requestFocus();
+                break;
+        }
+    }*/
 
 }
