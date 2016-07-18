@@ -31,7 +31,7 @@ public class AppInfoUtils {
         List<AppInfo> list = new ArrayList<>();
         List<AppInfo> usrList = new ArrayList<>();
         List<AppInfo> sysList = new ArrayList<>();
-        usrList.add(new AppInfo(0));
+        //usrList.add(new AppInfo(0));
         sysList.add(new AppInfo(0));
 
 
@@ -63,7 +63,7 @@ public class AppInfoUtils {
             }
         }
         SharedPreferences mPref = context.getSharedPreferences("config", Context.MODE_PRIVATE);
-        mPref.edit().putInt("user_app_count",usrList.size()-1).commit();
+        mPref.edit().putInt("user_app_count",usrList.size()).commit();
         mPref.edit().putInt("sys_app_count",sysList.size()-1).commit();
         list.addAll(usrList);
         list.addAll(sysList);

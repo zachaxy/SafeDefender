@@ -1,20 +1,28 @@
 package com.zachaxy.safedefender.ui;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.Formatter;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.zachaxy.safedefender.R;
@@ -25,13 +33,19 @@ import java.util.List;
 
 public class AppManagerActivity extends AppCompatActivity {
 
-    TextView tvRom, tvSD;
+    TextView tvRom, tvSD, tvAppType;
     ListView lv_app;
     LinearLayout mWaitAppListProgress;
     List<AppInfo> mAppInfoList;
     AppManagerAdapter adapter;
 
     int usrAppCount, sysAppCount;
+
+    //---------
+    boolean appTpyeChangeFlag = false; //滑动过程中状态转换的标志,只有状态改变了才允许修改文字;
+    int currentType = 1, oldType = 1;
+
+    PopupWindow popupWindow;
 
     SharedPreferences mPref;
 
@@ -43,6 +57,8 @@ public class AppManagerActivity extends AppCompatActivity {
                     adapter = new AppManagerAdapter();
                     lv_app.setAdapter(adapter);
                     mWaitAppListProgress.setVisibility(View.INVISIBLE);
+                    tvAppType.setVisibility(View.VISIBLE);
+                    tvAppType.setText("用户程序:" + usrAppCount);
                     break;
                 default:
                     break;
@@ -61,6 +77,7 @@ public class AppManagerActivity extends AppCompatActivity {
     private void initView() {
         tvRom = (TextView) findViewById(R.id.tv_am_rom_available);
         tvSD = (TextView) findViewById(R.id.tv_am_sd_available);
+        tvAppType = (TextView) findViewById(R.id.tv_app_type);
         lv_app = (ListView) findViewById(R.id.lv_am_apps);
         mWaitAppListProgress = (LinearLayout) findViewById(R.id.ll_wait_applist);
 
@@ -71,6 +88,71 @@ public class AppManagerActivity extends AppCompatActivity {
         //格式化可用空间
         tvRom.setText(Formatter.formatFileSize(this, romAvailable));
         tvSD.setText(Formatter.formatFileSize(this, sdAvailable));
+
+        lv_app.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+                dismissPopupWindow();
+
+                oldType = currentType;
+
+                if (firstVisibleItem < usrAppCount) {
+                    //用户app
+                    currentType = 1;
+                } else {
+                    //系统app
+                    currentType = 2;
+                }
+
+                if (oldType != currentType) {
+                    appTpyeChangeFlag = true;
+                } else {
+                    appTpyeChangeFlag = false;
+                }
+
+
+                if (appTpyeChangeFlag) {
+                    if (currentType == 1) {
+                        //用户app
+                        tvAppType.setText("用户程序:" + usrAppCount);
+                    } else {
+                        //系统app
+                        tvAppType.setText("系统程序:" + sysAppCount);
+                    }
+                }
+            }
+        });
+
+        lv_app.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Object obj = lv_app.getItemAtPosition(position);
+                if (obj != null && obj instanceof AppInfo && ((AppInfo) obj).getAppType() == 1) {
+                    View contentView = View.inflate(AppManagerActivity.this, R.layout.app_item_popup_window, null);
+
+                    dismissPopupWindow();
+
+                    popupWindow = new PopupWindow(contentView, -2, -2);
+
+                    //需要注意的是:使用popupwindow,必须设置背景,不然动画效果不能展示
+                    popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    //传入一个长度为2的数组,将返回该view距离屏幕x,y的距离
+                    int[] location = new int[2];
+                    view.getLocationInWindow(location);
+                    popupWindow.showAtLocation(parent, Gravity.LEFT + Gravity.TOP, 70, location[1] - 5);
+
+                    ScaleAnimation animation = new ScaleAnimation(0.5f, 1f, 0.5f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                    animation.setDuration(300);
+                    contentView.startAnimation(animation);
+                }
+            }
+        });
     }
 
     private void initData() {
@@ -170,5 +252,18 @@ public class AppManagerActivity extends AppCompatActivity {
         TextView name;
         TextView location;
         TextView size;
+    }
+
+    private void dismissPopupWindow() {
+        if (popupWindow != null && popupWindow.isShowing()) {
+            popupWindow.dismiss();
+            popupWindow = null;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        dismissPopupWindow();
+        super.onDestroy();
     }
 }
