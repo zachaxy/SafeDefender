@@ -3,12 +3,10 @@ package com.zachaxy.safedefender.service;
 import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.widget.Toast;
 
 import com.zachaxy.safedefender.dao.AddressDao;
 import com.zachaxy.safedefender.receiver.OutCallReceiver;
@@ -16,7 +14,10 @@ import com.zachaxy.safedefender.utils.AddrToastUtils;
 
 /**
  * Created by zhangxin on 2016/7/11.
- * 来电显示服务
+ * 来电/去电显示服务
+ * 去电使用outCallReceiver
+ * 来电使用IncomingCallAddrService的listener监听来电状态
+ * 来电使用的是service,去电使用的是receiver.
  */
 public class IncomingCallAddrService extends Service {
 
@@ -33,39 +34,37 @@ public class IncomingCallAddrService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        //监听来电显示
+        //监听来电(只是打过来的,注意和下面的outCallReceiver功能的区别)显示
         tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         listner = new SafePhoneStateListner();
-        tm.listen(listner,PhoneStateListener.LISTEN_CALL_STATE);
+        tm.listen(listner, PhoneStateListener.LISTEN_CALL_STATE);
 
+        //动态注册receiver,执行动作是用来监听来电/去电.目的是显示来电归属地
         outCallReceiver = new OutCallReceiver();
-        registerReceiver(outCallReceiver,new IntentFilter(Intent.ACTION_NEW_OUTGOING_CALL));
+        registerReceiver(outCallReceiver, new IntentFilter(Intent.ACTION_NEW_OUTGOING_CALL));
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         //改变状态,停止监听
-        tm.listen(listner,PhoneStateListener.LISTEN_NONE);
+        tm.listen(listner, PhoneStateListener.LISTEN_NONE);
         unregisterReceiver(outCallReceiver);
     }
 
 
-
-
-
-    class SafePhoneStateListner extends PhoneStateListener{
+    class SafePhoneStateListner extends PhoneStateListener {
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
-            switch (state){
+            switch (state) {
                 case TelephonyManager.CALL_STATE_RINGING:
-                    //电话铃响
+                    //新的来电,电话铃响
                     String incomingAddress = AddressDao.getAddress(incomingNumber);
                     //Toast.makeText(IncomingCallAddrService.this,incomingAddress,Toast.LENGTH_LONG).show();
-                    AddrToastUtils.show(IncomingCallAddrService.this,incomingAddress);
+                    AddrToastUtils.show(IncomingCallAddrService.this, incomingAddress);
                     break;
                 case TelephonyManager.CALL_STATE_IDLE:
-                    //TODO:取消归属地显示
+                    //对方电话挂断,取消归属地显示
                     AddrToastUtils.hide();
                     break;
                 default:

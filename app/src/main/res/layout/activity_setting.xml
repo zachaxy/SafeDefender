@@ -44,4 +44,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         custom:set_item_select_title="来电归属地位置设置" />
+
+    <com.zachaxy.safedefender.widget.SettingItemView
+        android:id="@+id/set_interception_black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        custom:set_item_desc_off="电话短信拦截已关闭"
+        custom:set_item_desc_on="电话短信拦截已开启"
+        custom:set_item_title="电话短信拦截设置" />
 </LinearLayout>

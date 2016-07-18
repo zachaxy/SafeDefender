@@ -115,7 +115,7 @@ public class BlackListDao {
      * 分批查询黑名单,减轻服务器压力.
      *
      * @param startIndex 表示接下来要查询的开始的位置
-     * @param maxCount    表示每一批量最多要查询的条目
+     * @param maxCount   表示每一批量最多要查询的条目
      * @return 返回一个page
      */
     public List<BlackItemInfo> findBatch(int startIndex, int maxCount) {
@@ -145,4 +145,35 @@ public class BlackListDao {
         return count;
     }
 
+    /**
+     * 查询单个电话号码是否在黑名单中
+     *
+     * @param from
+     */
+    public boolean findNumber(String from) {
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cursor = db.query("balckList", new String[]{"number"}, null, null, null, null, null);
+        if (cursor.getCount() > 1) {
+            cursor.close();
+            db.close();
+            return true;
+        }
+
+        cursor.close();
+        db.close();
+        return false;
+    }
+
+
+    public String findModeByNumber(String number){
+        String mode = "";
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cursor = db.query("balckList", new String[]{"mode"}, "number=?", new String[]{number}, null, null, null);
+        if (cursor.moveToNext()) {
+            mode = cursor.getString(0);
+        }
+        cursor.close();
+        db.close();
+        return mode;
+    }
 }

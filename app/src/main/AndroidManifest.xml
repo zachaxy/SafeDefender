@@ -21,6 +21,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <!--Activity清单列表-->
         <activity android:name=".ui.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,17 +45,21 @@
             android:name=".ui.RocketBackgroundActivity"
             android:launchMode="singleInstance"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name=".ui.CallMsgSafeActivity" />
 
+        <!--Receiver清单列表-->
         <receiver android:name=".receiver.BootStartReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
         <receiver android:name=".receiver.SmsReceiver">
             <intent-filter android:priority="1000">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
+
         <receiver
             android:name=".receiver.AdminReceiver"
             android:description="@string/sample_device_admin_description"
@@ -76,11 +82,16 @@
         </receiver>
         -->
 
+        <!--Service清单列表-->
         <service android:name=".service.LocationService" />
         <service android:name=".service.IncomingCallAddrService" />
         <service android:name=".service.RocketService" />
 
-        <activity android:name=".ui.CallMsgSafeActivity"></activity>
+
+        <service
+            android:name=".service.InterceptBlackService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

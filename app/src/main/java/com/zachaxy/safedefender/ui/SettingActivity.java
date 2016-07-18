@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.zachaxy.safedefender.R;
 import com.zachaxy.safedefender.service.IncomingCallAddrService;
+import com.zachaxy.safedefender.service.InterceptBlackService;
 import com.zachaxy.safedefender.service.RocketService;
 import com.zachaxy.safedefender.utils.ServiceStatusUtils;
 import com.zachaxy.safedefender.widget.SettingItemView;
@@ -22,9 +23,9 @@ import com.zachaxy.safedefender.widget.SettingSelectItemView;
 public class SettingActivity extends Activity {
 
     private SharedPreferences mPref;
-    private SettingItemView mSettingAutoUpdate, mSettingRocket, mSettingShowAddr;
+    private SettingItemView mSettingAutoUpdate, mSettingRocket, mSettingShowAddr, mInterceptBlack;
     private SettingSelectItemView mSettingAddrStyle, mSettingAddrPosition;
-    private boolean autoUpdate, showRocket, showAddr;
+    private boolean autoUpdate, showRocket, showAddr, interceptBlack;
     private int styleIndex;
 
     private String[] addrStyles = {"半透明", "活力橙", "卫士蓝", "金属灰", "苹果绿"};
@@ -43,7 +44,7 @@ public class SettingActivity extends Activity {
         initShowAddreItem();
         initAddrStyle();
         initAddrPosition();
-
+        initInterceptBlack();
     }
 
 
@@ -74,6 +75,7 @@ public class SettingActivity extends Activity {
         mSettingShowAddr = (SettingItemView) findViewById(R.id.set_show_phone_addr);
 
         //这里根据当前服务是否运行来更新勾选框
+        //TODO:添加开机自启服务
         showAddr = ServiceStatusUtils.isServiceRunning(this, "com.zachaxy.safedefender.service.IncomingCallAddrService");
         mSettingShowAddr.setCheck(showAddr);
 
@@ -140,12 +142,33 @@ public class SettingActivity extends Activity {
         mSettingRocket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mSettingRocket.isCheck()){
+                if (mSettingRocket.isCheck()) {
                     mSettingRocket.setCheck(false);
                     stopService(new Intent(SettingActivity.this, RocketService.class));
-                }else {
+                } else {
                     mSettingRocket.setCheck(true);
                     startService(new Intent(SettingActivity.this, RocketService.class));
+                }
+            }
+        });
+    }
+
+    private void initInterceptBlack() {
+        mInterceptBlack = (SettingItemView) findViewById(R.id.set_interception_black);
+//        interceptBlack = mPref.getBoolean("intercept_black", true);
+        //TODO:添加开机自启服务
+        interceptBlack = ServiceStatusUtils.isServiceRunning(this, "com.zachaxy.safedefender.service.InterceptBlackService");
+
+        mInterceptBlack.setCheck(interceptBlack);
+        mInterceptBlack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mInterceptBlack.isCheck()) {
+                    mInterceptBlack.setCheck(false);
+                    stopService(new Intent(SettingActivity.this, InterceptBlackService.class));
+                } else {
+                    mInterceptBlack.setCheck(true);
+                    startService(new Intent(SettingActivity.this, InterceptBlackService.class));
                 }
             }
         });
