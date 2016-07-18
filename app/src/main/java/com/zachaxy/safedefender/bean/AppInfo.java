@@ -13,16 +13,20 @@ public class AppInfo {
     private Drawable icon;
     private String name;
     private String size;
-    private boolean isUer;
+    private int appType; //0:占位符 1:用户应用 2:系统应用
     private boolean isRom;
 
-    public AppInfo(Drawable icon, String name, String packageName, String size, boolean isUer, boolean isRom) {
+    public AppInfo(int appType) {
+        this.appType = appType;
+    }
+
+    public AppInfo(Drawable icon, String name, String packageName, String size, int appType, boolean isRom) {
         this.icon = icon;
         this.name = name;
-        this.isUer = isUer;
-        this.size = size;
-        this.isRom = isRom;
         this.packageName = packageName;
+        this.size = size;
+        this.appType = appType;
+        this.isRom = isRom;
     }
 
     public String getPackageName() {
@@ -59,12 +63,12 @@ public class AppInfo {
         this.size = size;
     }
 
-    public boolean isUer() {
-        return isUer;
+    public int getAppType() {
+        return appType;
     }
 
-    public void setUer(boolean uer) {
-        isUer = uer;
+    public void setAppType(int appType) {
+        this.appType = appType;
     }
 
     public boolean isRom() {
@@ -81,7 +85,7 @@ public class AppInfo {
                 "name='" + name + '\'' +
                 ", size=" + size +
                 ", isRom=" + isRom +
-                ", isUer=" + isUer +
+                ", appType=" + appType +
                 '}';
     }
 }

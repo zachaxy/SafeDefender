@@ -1,5 +1,8 @@
 package com.zachaxy.safedefender.ui;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -28,6 +31,9 @@ public class AppManagerActivity extends AppCompatActivity {
     List<AppInfo> mAppInfoList;
     AppManagerAdapter adapter;
 
+    int usrAppCount, sysAppCount;
+
+    SharedPreferences mPref;
 
     private Handler handler = new Handler() {
         @Override
@@ -68,10 +74,13 @@ public class AppManagerActivity extends AppCompatActivity {
     }
 
     private void initData() {
+        mPref = getSharedPreferences("config", MODE_PRIVATE);
         new Thread() {
             @Override
             public void run() {
                 mAppInfoList = AppInfoUtils.getAllApps(AppManagerActivity.this);
+                usrAppCount = mPref.getInt("user_app_count", 0);
+                sysAppCount = mPref.getInt("sys_app_count", 0);
                 handler.sendEmptyMessage(0);
             }
         }.start();
@@ -86,6 +95,9 @@ public class AppManagerActivity extends AppCompatActivity {
 
         @Override
         public Object getItem(int position) {
+            if (getItemViewType(position) == 0) {
+                return null;
+            }
             return mAppInfoList.get(position);
         }
 
@@ -96,12 +108,31 @@ public class AppManagerActivity extends AppCompatActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            AppInfo appInfo = mAppInfoList.get(position);
 
+            if (getItemViewType(position) == 0) {
+                TextView textView = new TextView(AppManagerActivity.this);
+                textView.setTextColor(Color.WHITE);
+                textView.setBackgroundColor(Color.GRAY);
+
+                if (position == 0) {
+                    textView.setText("用户程序:" + usrAppCount);
+                } else {
+                    textView.setText("系统程序:" + sysAppCount);
+                }
+
+                return textView;
+            }
+
+            //-----------------------------------
+            AppInfo appInfo = mAppInfoList.get(position);
             View view;
             AppViewHolder viewHolder;
 
-            if (convertView == null) {
+            if (convertView != null && convertView instanceof LinearLayout) {
+                view = convertView;
+                viewHolder = (AppViewHolder) view.getTag();
+            } else {
+                //convertView不为null,或者有缓存,但是缓存的是TextView并不是LinearLayout,那么都需要重新绘制
                 view = View.inflate(AppManagerActivity.this, R.layout.app_item, null);
                 viewHolder = new AppViewHolder();
                 viewHolder.icon = (ImageView) view.findViewById(R.id.img_app_icon);
@@ -109,24 +140,35 @@ public class AppManagerActivity extends AppCompatActivity {
                 viewHolder.location = (TextView) view.findViewById(R.id.tv_app_location);
                 viewHolder.size = (TextView) view.findViewById(R.id.tv_app_size);
                 view.setTag(viewHolder);
-            } else {
-                view = convertView;
-                viewHolder = (AppViewHolder) view.getTag();
             }
-
 
             viewHolder.icon.setImageDrawable(appInfo.getIcon());
             viewHolder.name.setText(appInfo.getName());
-            viewHolder.location.setText(appInfo.isRom() ? "手机内存" : "SD卡");
             viewHolder.size.setText(appInfo.getSize());
+
+            if (getItemViewType(position) == 1) {
+                viewHolder.location.setText(appInfo.isRom() ? "手机内存" : "SD卡");
+            } else if (getItemViewType(position) == 2) {
+                viewHolder.location.setText("");
+            }
             return view;
         }
 
-        class AppViewHolder {
-            ImageView icon;
-            TextView name;
-            TextView location;
-            TextView size;
+        @Override
+        public int getItemViewType(int position) {
+            return mAppInfoList.get(position).getAppType();
         }
+
+        @Override
+        public int getViewTypeCount() {
+            return 3;
+        }
+    }
+
+    class AppViewHolder {
+        ImageView icon;
+        TextView name;
+        TextView location;
+        TextView size;
     }
 }
