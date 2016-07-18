@@ -22,7 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!--Activity清单列表-->
+        <!-- Activity清单列表 -->
         <activity android:name=".ui.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -46,20 +46,21 @@
             android:launchMode="singleInstance"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity android:name=".ui.CallMsgSafeActivity" />
+        <activity android:name=".ui.AppManagerActivity"/>
 
-        <!--Receiver清单列表-->
+
+
+        <!-- Receiver清单列表 -->
         <receiver android:name=".receiver.BootStartReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
         <receiver android:name=".receiver.SmsReceiver">
             <intent-filter android:priority="1000">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".receiver.AdminReceiver"
             android:description="@string/sample_device_admin_description"
@@ -82,16 +83,17 @@
         </receiver>
         -->
 
-        <!--Service清单列表-->
+
+        <!-- Service清单列表 -->
         <service android:name=".service.LocationService" />
         <service android:name=".service.IncomingCallAddrService" />
         <service android:name=".service.RocketService" />
-
-
         <service
             android:name=".service.InterceptBlackService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+
     </application>
 
 </manifest>
