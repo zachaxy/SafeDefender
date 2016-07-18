@@ -1,15 +1,15 @@
 package com.zachaxy.safedefender.ui;
 
-import android.animation.ObjectAnimator;
-import android.content.Context;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.format.Formatter;
 import android.view.Gravity;
 import android.view.View;
@@ -31,7 +31,7 @@ import com.zachaxy.safedefender.utils.AppInfoUtils;
 
 import java.util.List;
 
-public class AppManagerActivity extends AppCompatActivity {
+public class AppManagerActivity extends Activity {
 
     TextView tvRom, tvSD, tvAppType;
     ListView lv_app;
@@ -46,6 +46,7 @@ public class AppManagerActivity extends AppCompatActivity {
     int currentType = 1, oldType = 1;
 
     PopupWindow popupWindow;
+    AppInfo clickAppItem;
 
     SharedPreferences mPref;
 
@@ -134,9 +135,44 @@ public class AppManagerActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Object obj = lv_app.getItemAtPosition(position);
                 if (obj != null && obj instanceof AppInfo && ((AppInfo) obj).getAppType() == 1) {
-                    View contentView = View.inflate(AppManagerActivity.this, R.layout.app_item_popup_window, null);
-
                     dismissPopupWindow();
+
+                    clickAppItem = (AppInfo) obj;
+                    View contentView = View.inflate(AppManagerActivity.this, R.layout.app_item_popup_window, null);
+                    LinearLayout appUninstall = (LinearLayout) contentView.findViewById(R.id.popup_app_uninstall);
+                    LinearLayout appRun = (LinearLayout) contentView.findViewById(R.id.popup_app_run);
+                    LinearLayout appShare = (LinearLayout) contentView.findViewById(R.id.popup_app_share);
+
+                    appUninstall.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent localIntent = new Intent("android.intent.action.DELETE", Uri.parse("pacKage"+clickAppItem.getPackageName()));
+                            AppManagerActivity.this.startActivityForResult(localIntent,0);
+                            //popupWindow.dismiss();
+                        }
+                    });
+
+                    appRun.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent localIntent = AppManagerActivity.this.getPackageManager().getLaunchIntentForPackage(clickAppItem.getPackageName());
+                            AppManagerActivity.this.startActivity(localIntent);
+                            popupWindow.dismiss();
+                        }
+                    });
+
+                    appShare.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent localIntent = new Intent("android.intent.action.SEND");
+                            localIntent.setType("text/plain");
+                            localIntent.putExtra("android.intent.extra.SUBJECT", "f分享");
+                            localIntent.putExtra("android.intent.extra.TEXT", "Hi,推荐你使用安全卫士,保护你的手机");
+                            AppManagerActivity.this.startActivity(Intent.createChooser(localIntent, "分享"));
+                            popupWindow.dismiss();
+                        }
+                    });
+
 
                     popupWindow = new PopupWindow(contentView, -2, -2);
 
@@ -260,6 +296,7 @@ public class AppManagerActivity extends AppCompatActivity {
             popupWindow = null;
         }
     }
+
 
     @Override
     protected void onDestroy() {
