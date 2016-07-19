@@ -1,7 +1,10 @@
 package com.zachaxy.safedefender.ui;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -10,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.text.format.Formatter;
 import android.view.Gravity;
 import android.view.View;
@@ -60,6 +64,20 @@ public class AppManagerActivity extends Activity {
                     mWaitAppListProgress.setVisibility(View.INVISIBLE);
                     tvAppType.setVisibility(View.VISIBLE);
                     tvAppType.setText("用户程序:" + usrAppCount);
+                    break;
+                case 1:
+                    usrAppCount--;
+                    tvAppType.setText("用户程序:" + usrAppCount);
+                   /* if (currentType == 1) {
+                        //用户app
+                        tvAppType.setText("用户程序:" + usrAppCount);
+                    } else {
+                        //系统app
+                        tvAppType.setText("系统程序:" + sysAppCount);
+                    }*/
+                    mPref.edit().putInt("user_app_count", usrAppCount).commit();
+                    mAppInfoList.remove(msg.arg1);
+                    adapter.notifyDataSetChanged();
                     break;
                 default:
                     break;
@@ -142,13 +160,14 @@ public class AppManagerActivity extends Activity {
                     LinearLayout appUninstall = (LinearLayout) contentView.findViewById(R.id.popup_app_uninstall);
                     LinearLayout appRun = (LinearLayout) contentView.findViewById(R.id.popup_app_run);
                     LinearLayout appShare = (LinearLayout) contentView.findViewById(R.id.popup_app_share);
+                    LinearLayout appDetail = (LinearLayout) contentView.findViewById(R.id.popup_app_detail);
 
                     appUninstall.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent localIntent = new Intent("android.intent.action.DELETE", Uri.parse("pacKage"+clickAppItem.getPackageName()));
-                            AppManagerActivity.this.startActivityForResult(localIntent,0);
-                            //popupWindow.dismiss();
+                            Intent localIntent = new Intent("android.intent.action.DELETE", Uri.parse("package:" + clickAppItem.getPackageName()));
+                            AppManagerActivity.this.startActivity(localIntent);
+                            popupWindow.dismiss();
                         }
                     });
 
@@ -173,7 +192,19 @@ public class AppManagerActivity extends Activity {
                         }
                     });
 
+                    appDetail.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent detailIntent = new Intent();
+                            detailIntent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            //detailIntent.setData(Uri.fromParts("package", clickAppItem.getPackageName(), null));
+                            detailIntent.setData(Uri.parse("package:" + clickAppItem.getPackageName()));
+                            startActivity(detailIntent);
+                            dismissPopupWindow();
+                        }
+                    });
 
+                    //-2表示的是wrap_content...
                     popupWindow = new PopupWindow(contentView, -2, -2);
 
                     //需要注意的是:使用popupwindow,必须设置背景,不然动画效果不能展示
@@ -189,6 +220,16 @@ public class AppManagerActivity extends Activity {
                 }
             }
         });
+
+        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_PACKAGE_REMOVED);
+        /*     不设置schme,就接收不到广播!!!!!!!!!!!!!!
+        * 这个属性用于设定URI的scheme部分。它是给指定URI设置的最基本的属性，至少要给过滤器设置一个scheme属性，否则，其他的URI属性就没有意义了。
+        * scheme属性值没有”:”符号结尾（如，http，而不是http: )
+        * 如果过滤器有一个数据类型（设置了mimeType属性），但没有设置scheme属性，那么系统就会假定scheme是content:和file:
+        * 注意：在Android框架中，scheme的匹配时大小写敏感的，跟RFC格式不一样。因此，要始终使用小写字母来指定scheme。
+        * */
+        intentFilter.addDataScheme("package");
+        registerReceiver(new UninstallReceiver(), intentFilter);
     }
 
     private void initData() {
@@ -302,5 +343,26 @@ public class AppManagerActivity extends Activity {
     protected void onDestroy() {
         dismissPopupWindow();
         super.onDestroy();
+    }
+
+    class UninstallReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //System.out.println("删除了一个应用" + intent.getData().getSchemeSpecificPart());
+            int i = 0;
+            for (; i < mAppInfoList.size(); i++) {
+                //if(mAppInfoList)
+                AppInfo app = mAppInfoList.get(i);
+                if (app.getAppType() == 1 && app.getPackageName().equals(intent.getData().getSchemeSpecificPart())) {
+                    Message message = new Message();
+                    message.what = 1;
+                    message.arg1 = i;
+                    handler.sendMessage(message);
+                    break;
+                }
+            }
+
+        }
     }
 }

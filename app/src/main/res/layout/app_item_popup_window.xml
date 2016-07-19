@@ -64,4 +64,24 @@
             android:text="分享" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/popup_app_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/app_detail" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="详情" />
+
+    </LinearLayout>
 </LinearLayout>

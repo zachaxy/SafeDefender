@@ -55,7 +55,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_am_1"
-        android:background="@color/gray"
+        android:background="#FF888888"
+        android:textColor="#fff"
         android:visibility="invisible" />
 
     <ListView
@@ -63,7 +64,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_app_type"
-        android:divider="@drawable/divider_line"/>
+        android:divider="@drawable/divider_line" />
 
     <LinearLayout
         android:id="@+id/ll_wait_applist"
