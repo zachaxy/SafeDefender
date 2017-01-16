@@ -39,7 +39,7 @@ public class IncomingCallAddrService extends Service {
         listner = new SafePhoneStateListner();
         tm.listen(listner, PhoneStateListener.LISTEN_CALL_STATE);
 
-        //动态注册receiver,执行动作是用来监听来电/去电.目的是显示来电归属地
+        //动态注册receiver,执行动作是用来监听去电.目的是显示去电归属地
         outCallReceiver = new OutCallReceiver();
         registerReceiver(outCallReceiver, new IntentFilter(Intent.ACTION_NEW_OUTGOING_CALL));
     }
@@ -56,7 +56,7 @@ public class IncomingCallAddrService extends Service {
     class SafePhoneStateListner extends PhoneStateListener {
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
-            switch (state) {
+            switch (state) {  //该状态有三个:闲置;响铃;接通;这里只监听响铃,表示有电话来.
                 case TelephonyManager.CALL_STATE_RINGING:
                     //新的来电,电话铃响
                     String incomingAddress = AddressDao.getAddress(incomingNumber);

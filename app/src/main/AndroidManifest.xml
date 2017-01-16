@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.zachaxy.safedefender">
+          package="com.zachaxy.safedefender">
 
     <!-- 一下分别添加了访问网络,读取SIM卡信息,开机广播,读取联系人信息,发送短信,接收短信,手机定位,手机震动,拨打电话,在window层显示view -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/> <!--该权限是用于在window上显示view-->
 
     <application
         android:allowBackup="true"
@@ -25,40 +25,39 @@
         <!-- Activity清单列表 -->
         <activity android:name=".ui.SplashActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.HomeActivity" />
-        <activity android:name=".ui.SettingActivity" />
-        <activity android:name=".ui.LostFindActivity" />
-        <activity android:name=".ui.SafeGuideActivity" />
-        <activity android:name=".ui.ContactActivity" />
-        <activity android:name=".ui.AdvanceToolActivity" />
-        <activity android:name=".ui.AddressActivity" />
+        <activity android:name=".ui.HomeActivity"/>
+        <activity android:name=".ui.SettingActivity"/>
+        <activity android:name=".ui.LostFindActivity"/>
+        <activity android:name=".ui.SafeGuideActivity"/>
+        <activity android:name=".ui.ContactActivity"/>
+        <activity android:name=".ui.AdvanceToolActivity"/>
+        <activity android:name=".ui.AddressActivity"/>
         <!-- 设置该Activity的半透明的浮层效果 -->
         <activity
             android:name=".ui.DragAddrPositionActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
         <activity
             android:name=".ui.RocketBackgroundActivity"
             android:launchMode="singleInstance"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".ui.CallMsgSafeActivity" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <activity android:name=".ui.CallMsgSafeActivity"/>
         <activity android:name=".ui.AppManagerActivity"/>
-
 
 
         <!-- Receiver清单列表 -->
         <receiver android:name=".receiver.BootStartReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
         <receiver android:name=".receiver.SmsReceiver">
             <intent-filter android:priority="1000">
-                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
             </intent-filter>
         </receiver>
         <receiver
@@ -68,10 +67,10 @@
             android:permission="android.permission.BIND_DEVICE_ADMIN">
             <meta-data
                 android:name="android.app.device_admin"
-                android:resource="@xml/device_admin_safedefender" />
+                android:resource="@xml/device_admin_safedefender"/>
 
             <intent-filter>
-                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED"/>
             </intent-filter>
         </receiver>
 
@@ -84,14 +83,11 @@
         -->
 
 
-        <!-- Service清单列表 -->
-        <service android:name=".service.LocationService" />
-        <service android:name=".service.IncomingCallAddrService" />
-        <service android:name=".service.RocketService" />
-        <service
-            android:name=".service.InterceptBlackService"
-            android:enabled="true"
-            android:exported="true" />
+        <!-- Service清单列表 没有优先级吗,两个服务都监听电话,谁先执行???-->
+        <service android:name=".service.LocationService"/>
+        <service android:name=".service.IncomingCallAddrService"/>
+        <service android:name=".service.RocketService"/>
+        <service android:name=".service.InterceptBlackService"/>
 
 
     </application>

@@ -35,6 +35,7 @@ public class HomeActivity extends Activity {
     private SharedPreferences mPref;
 
     private final String SECREtKEY = "dashenshouhuweishi";
+
     private String[] mFuncDesc = {
             "手机防盗",
             "通信卫士",

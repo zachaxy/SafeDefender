@@ -124,12 +124,12 @@ public class SplashActivity extends Activity {
         PackageInfo packageInfo = null;
         try {
             packageInfo = packageManager.getPackageInfo(getPackageName(), 0);
+            return packageInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
-            //没有找到相关的报名.因此这里建议使用getPackageName()方法,而不是手动写入包名字符串
+            //没有找到相关的包名.因此这里建议使用getPackageName()方法,而不是手动写入包名字符串
             e.printStackTrace();
         }
-        String versionName = packageInfo.versionName;
-        return versionName;
+        return null;
     }
 
     /***
@@ -142,11 +142,12 @@ public class SplashActivity extends Activity {
         PackageInfo packageInfo = null;
         try {
             packageInfo = packageManager.getPackageInfo(getPackageName(), 0);
+            return packageInfo.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
             //没有找到相关的报名.因此这里建议使用getPackageName()方法,而不是手动写入包名字符串
             e.printStackTrace();
         }
-        return packageInfo.versionCode;
+        return -1;
     }
 
 
@@ -178,22 +179,6 @@ public class SplashActivity extends Activity {
                         //判断是否有新版本出现.
                         if (mUpdateInfo.getVersionCode() > getLocalVersionCode()) {
                             mHandler.sendEmptyMessage(CODE_UPDATE_DIALOG);
-                        } else {
-                            //注意,如果已经是最新的版本,那么也要添加一个分支,使其跳转,否则程序一直卡在splash页面
-                            //但是这里如果是最新版本的话,会很快跳转到主页面,所以这里应该加一个延时,来展示我们的logo或广告.
-                            //TODO:扩展仿照主流应用,在右上角添加一个倒计时圆圈,如果点击直接进入,那么直接进入到主页面
-                            //这一步代码出了问题,界面迟迟加载不进来,是Handler的问题吗
-                            //delayToCountDown(10);
-                            /*//如下代码会报错,待检测
-                            Message msg = new Message();
-                            msg.what = CODE_CHANGE_COUNTDOWN;
-                            for (int i = 2; i > 0; i--){
-                                msg.obj = i+"s";
-                                SystemClock.sleep(1000);
-                                mHandler.sendMessage (msg);
-                            }
-                            SystemClock.sleep(1000);
-                            mHandler.sendEmptyMessage(CODE_ENTER_HOME);*/
                         }
                     }
                 } catch (MalformedURLException e) {
@@ -234,7 +219,7 @@ public class SplashActivity extends Activity {
         dialog.setPositiveButton("立即更新", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                //TODO:立即更新需要下载,该功能还未实现.考虑后期添加bmob后台云服务?
             }
         });
         dialog.setNegativeButton("稍后提醒", new DialogInterface.OnClickListener() {
@@ -268,7 +253,7 @@ public class SplashActivity extends Activity {
 
     /***
      * 该函数是点击右上角跳过广告后,直接进入主页面
-     * TODO: 存在的问题是如果直接跳转进入主界面,那么之前子线程的计数器还在进行,倒计时0s后还是会在执行一次跳转到主界面
+     * 存在的问题是如果直接跳转进入主界面,那么之前子线程的计数器还在进行,倒计时0s后还是会在执行一次跳转到主界面
      * 解决方法:添加一个标志位?(x)方法不可取,因为在sendMessage的时候是一块发出去的,并不是间隔一秒再发的,只是处理的时候按照间隔一秒处理
      * 正确的方法是使用handler.removeMessage(int what)方法
      *
@@ -307,6 +292,8 @@ public class SplashActivity extends Activity {
         enterHome();
     }
 
+    //拷贝数据库,之前的数据是存放在asset目录下的,程序中无法直接访问,因此需要拷贝到用户目录下.
+    //补充下:Android中还有另外一个文件夹raw,和assets差不多,也不会被R文件编译,但是raw下不能在建文件夹,assets文件下是可以在建文件夹的
     private void copyDB(String dbName) {
         //getFilesDir()--->data/data/com.zachaxy.safedefender/files/
         File destFile = new File(getFilesDir(), dbName);

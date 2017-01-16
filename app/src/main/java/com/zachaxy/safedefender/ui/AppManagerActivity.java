@@ -180,6 +180,7 @@ public class AppManagerActivity extends Activity {
                         }
                     });
 
+                    //TODO:后期需要引入微信分享
                     appShare.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -197,7 +198,6 @@ public class AppManagerActivity extends Activity {
                         public void onClick(View v) {
                             Intent detailIntent = new Intent();
                             detailIntent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                            //detailIntent.setData(Uri.fromParts("package", clickAppItem.getPackageName(), null));
                             detailIntent.setData(Uri.parse("package:" + clickAppItem.getPackageName()));
                             startActivity(detailIntent);
                             dismissPopupWindow();
